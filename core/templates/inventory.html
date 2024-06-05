@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="{% static 'css/../../static/admin/css/inventory.css' %}">
+
+    <!----===== Iconscout CSS ===== -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <title>Inventory</title>
+</head>
+<body>
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+               <img src="images/logo.png" alt="">
+            </div>
+            <span class="logo_name">TF Ansible</span>
+        </div>
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="{% url 'dashboard' %}">
+                    <i class="uil uil-estate"></i>
+                    <span class="link-name">Dashboard</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-files-landscapes"></i>
+                    <span class="link-name">Inventory</span>
+                </a></li>
+                <li><a href="{% url 'playbook' %}">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Playbook</span>
+                </a></li>
+                <li><a href="{% url 'jobs' %}">
+                    <i class="uil uil-thumbs-up"></i>
+                    <span class="link-name">Jobs</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-comments"></i>
+                    <span class="link-name">????????</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-share"></i>
+                    <span class="link-name">????????</span>
+                </a></li>
+            </ul>
+
+            <ul class="logout-mode">
+                <li><a href="{% url 'logout' %}">
+                    <i class="uil uil-signout"></i>
+                    <span class="link-name">Logout ({{ user.username }})</span>
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+    <section class="dashboard">
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+            <div class="btn-search">
+                <a href="{% url 'create-inventory' %}" class="buttonLink">Inventory erstellen</a>
+            </div>
+            <!--<img src="images/profile.jpg" alt="">-->
+        </div>
+        <div class="dash-content">
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-clock-three"></i>
+                    <span class="text">Inventory</span>
+                </div>
+                <div class="activity-data">
+                {% if inventory %}
+                    <div class="data names">
+                        <span class="data-title">Inventory Name</span>
+                        {% for item in inventory %}
+                            <a href="{% url 'inventory_details' id=item.id %}" class="data-list">{{ item.name }}</a>
+                        {% endfor %}
+                    </div>
+                    <div class="data joined">
+                        <span class="data-title">Beschreibung</span>
+                        {% for item in inventory %}
+                            <span class="data-list">{{ item.description }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="data type">
+                        <span class="data-title">Fachgruppe</span>
+                        {% for item in inventory %}
+                            <span class="data-list">{{ item.group }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="data status">
+                        <span class="data-title">Aktion</span>
+                        {% for item in inventory %}
+                            <button type="button" class="button" data-url="{% url 'inventory_details' id=item.id %}">
+                                <span class="button__text">Bearbeiten</span>
+                                <span class="button__icon">
+                                    <ion-icon name="create-outline"></ion-icon>
+                                </span>
+                            </button>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-data">
+                        Keine Daten verfügbar
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'js/../../static/admin/js/inventory.js' %}"></script>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.button');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            window.location.href = this.getAttribute('data-url');
+        });
+    });
+});
+</script>
+</body>
+</html>

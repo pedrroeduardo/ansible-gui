@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px;
+  background: #0082B4;
+}
+
+.container {
+  max-width: 800px;
+  background: #fff;
+  width: 100%; /* Utilize porcentagem para responsividade */
+  padding: 25px 40px 10px 40px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.select-menu {
+  position: relative;
+  width: 100%; /* Ocupa a largura total por padrão */
+  margin-bottom: 20px; /* Margem para separar dos outros elementos */
+}
+
+.select-menu .select-btn {
+  display: flex;
+  background: #fff;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 400;
+  border-radius: 8px;
+  align-items: center;
+  cursor: pointer;
+  justify-content: space-between;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.select-btn i {
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.select-menu.active .select-btn i {
+  transform: rotate(-180deg);
+}
+
+.options {
+  position: absolute; /* Posiciona o dropdown absolutamente dentro do seu contêiner */
+  width: 100%; /* O dropdown deve ter a mesma largura que o select-btn */
+  z-index: 1000; /* Garante que o dropdown esteja acima de outros elementos */
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1); /* Opcional: adiciona sombra para destacar o dropdown */
+  background: #fff; /* Deve corresponder ao fundo do select-btn */
+}
+
+.select-menu .options {
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 3px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.select-menu.active .options {
+  display: block;
+}
+
+.options .option {
+  display: flex;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 8px;
+  align-items: center;
+  background: #fff;
+}
+
+.options .option:hover {
+  background: #F2F2F2;
+}
+
+.option .option-text {
+  font-size: 16px;
+  color: #333;
+}
+
+.container .text {
+  text-align: center;
+  font-size: 35px;
+  font-weight: 600;
+  background: #0082B4;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.container form {
+  padding: 30px 0 0 0;
+}
+
+.container form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.form-row .input-data {
+  flex: 1; /* Ocupa o espaço disponível */
+  min-width: 250px; /* Mínimo para que o conteúdo não fique muito comprimido */
+  margin: 10px; /* Margem para espaçamento */
+  position: relative;
+}
+
+.form-row .input-data label,
+.form-row .input-data input {
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.input-data input {
+  height: 40px;
+  border: none;
+  font-size: 17px;
+  border-bottom: 2px solid rgba(0,0,0,0.12);
+}
+
+.input-data input:focus {
+  border-bottom: 2px solid #3498db;
+}
+
+.input-data input:focus ~ label,
+.input-data input:valid ~ label{
+  transform: translateY(-20px);
+  font-size: 14px;
+  color: #3498db;
+}
+
+.submit-btn {
+  padding: 15px 30px;
+  background-color: #0082B4; /* Adjust the color to fit your theme */
+  color: #fff;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #006f9b; /* Darker shade for hover effect */
+}
+
+/* Enhancements for a more professional look */
+.form-row {
+  align-items: center; /* Centers the items vertically */
+}
+
+.input-data input, .wrapper textarea {
+  border-radius: 4px; /* Gives a subtle rounded corner */
+}
+
+.input-data input:focus, .wrapper textarea:focus {
+  border-color: #0082B4; /* Ensures focus state is clear */
+}
+
+/* Improved label transition for a smoother effect */
+.input-data label {
+  background-color: #fff; /* Matches the input background */
+  padding: 0 5px;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+  transition: all 0.2s ease-in-out;
+  color: #888; /* Initial label color */
+}
+
+.input-data input:focus ~ label,
+.input-data input:valid ~ label {
+  color: #0082B4; /* Color change on focus or when filled */
+}
+
+
+.wrapper {
+  background: #fff;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.wrapper span {
+  font-size: 16px;
+}
+
+.wrapper textarea {
+  width: 100%;
+  resize: none;
+  height: 59px;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  max-height: 330px;
+  border: 1px solid #bfbfbf;
+  font-family: 'Consolas';
+}
+
+textarea::placeholder {
+  color: #b3b3b3;
+}
+
+textarea:is(:focus, :valid) {
+  border: 2px solid #0082B4;
+}
+
+textarea::-webkit-scrollbar {
+  width: 0px;
+}
+.wrapper span.active {
+  color: #3498db; /* Ou #0082B4 para corresponder exatamente à cor da borda focada */
+}
+
+
+@media (max-width: 700px) {
+  .container .text {
+    font-size: 30px;
+  }
+
+  .container form .form-row {
+    display: block;
+  }
+
+  .form-row .input-data {
+    margin: 20px 0;
+  }
+}

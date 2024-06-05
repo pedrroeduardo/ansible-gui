@@ -1,0 +1,7 @@
+2024-06-05 13:27:13,840 INFO     Starting server at tcp:port=8000:interface=127.0.0.1
+2024-06-05 13:27:13,840 INFO     HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2024-06-05 13:27:13,841 INFO     Configuring endpoint tcp:port=8000:interface=127.0.0.1
+2024-06-05 13:27:13,841 INFO     Listening on TCP address 127.0.0.1:8000
+2024-06-05 13:59:26,375 INFO     Connected (version 2.0, client OpenSSH_8.9p1)
+2024-06-05 13:59:26,649 INFO     Authentication (password) successful!
+2024-06-05 13:59:38,620 WARNING  Application instance <Task pending name='Task-1' coro=<ProtocolTypeRouter.__call__() running at /home/netadmin/venv/lib/python3.10/site-packages/channels/routing.py:62> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at /usr/lib/python3.10/asyncio/futures.py:385, Task.task_wakeup()]>> for connection <WebSocketProtocol client=['127.0.0.1', 50984] path=b'/ws/run_job/74/'> took too long to shut down and was killed.

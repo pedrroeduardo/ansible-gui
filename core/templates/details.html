@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Details Inventory</title>
+      <link rel="stylesheet" href="{% static 'css/../../static/admin/css/detailsinventory.css' %}">
+      <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+   <body>
+      <div class="container">
+         <div class="text">Inventory bearbeiten</div>
+         <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+               <div class="input-data focus-line half-length" style="flex:1; min-width: 250px; margin-right: 20px;">
+                   {{ form.inventory_name }}
+                  <label for="{{ form.inventory_name.id_for_label }}">{{ form.inventory_name.label }}</label>
+               </div>
+               <div class="select-menu" style="flex:1; min-width: 250px;">
+                  <div class="select-btn">
+                     <span class="sBtn-text">Gruppe auswählen</span>
+                     <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul class="options">
+                      {% for value, label in form.group.field.choices %}
+                          <li class="option">
+                              <label>
+                                  <input type="radio" name="group" value="{{ value }}" {% if form.group.value == value %}checked{% endif %}>
+                                  <span class="option-text">{{ label }}</span>
+                              </label>
+                          </li>
+                      {% endfor %}
+                  </ul>
+               </div>
+            </div>
+            <div class="form-row">
+               <div style="width:100%" class="input-data focus-line half-length">
+                   {{ form.description }}
+                  <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+               </div>
+            </div>
+            <div class="wrapper">
+               <span>Content</span>
+                {{ form.content }}
+            </div>
+            <script>
+               const textarea = document.querySelector("textarea");
+               textarea.addEventListener("keyup", e =>{
+                 textarea.style.height = "63px";
+                 let scHeight = e.target.scrollHeight;
+                 textarea.style.height = `${scHeight}px`;
+               });
+            </script>
+            <div class="form-row-container">
+                <div class="form-row">
+                    <button type="submit" name="action" value="edit" class="submit-btn">Bearbeiten</button>
+                </div>
+                <div class="form-row">
+                    <button type="submit" name="action" value="delete" class="submit-btn">Löschen</button>
+                </div>
+                <div class="form-row">
+                    <button type="submit" name="action" value="cancel" class="submit-btn">Abbrechen</button>
+                </div>
+            </div>
+         </form>
+      </div>
+      <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
+      <script>
+         document.addEventListener("DOMContentLoaded", function() {
+           const textarea = document.querySelector(".wrapper textarea");
+           const contentLabel = document.querySelector(".wrapper span");
+
+           function updateLabel() {
+             if(textarea.value !== "" || textarea === document.activeElement) {
+               contentLabel.classList.add("active");
+             } else {
+               contentLabel.classList.remove("active");
+             }
+           }
+
+           textarea.addEventListener("keyup", updateLabel);
+           textarea.addEventListener("focus", updateLabel);
+           textarea.addEventListener("blur", updateLabel);
+
+           updateLabel();
+         });
+      </script>
+      <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const textarea = document.querySelector(".wrapper textarea");
+    const contentLabel = document.querySelector(".wrapper span");
+
+    function updateLabel() {
+        if (textarea.value !== "" || textarea === document.activeElement) {
+            contentLabel.classList.add("active");
+        } else {
+            contentLabel.classList.remove("active");
+        }
+    }
+
+    textarea.addEventListener("keyup", updateLabel);
+    textarea.addEventListener("focus", updateLabel);
+    textarea.addEventListener("blur", updateLabel);
+
+    updateLabel();
+
+    const selectBtn = document.querySelector(".select-btn");
+    const options = document.querySelectorAll(".option input");
+
+    options.forEach(option => {
+        option.addEventListener('change', function() {
+            if (option.checked) {
+                selectBtn.querySelector(".sBtn-text").textContent = option.nextElementSibling.textContent;
+            }
+        });
+    });
+
+    options.forEach(option => {
+        if (option.checked) {
+            selectBtn.querySelector(".sBtn-text").textContent = option.nextElementSibling.textContent;
+        }
+    });
+});
+</script>
+   </body>
+</html>

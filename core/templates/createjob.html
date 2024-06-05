@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Job erstellen</title>
+      <link rel="stylesheet" href="{% static 'css/../../static/admin/css/createinventory.css' %}">
+      <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+   <body>
+      <div class="container">
+         <div class="text">Job erstellen</div>
+         <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+               <div class="input-data focus-line half-length" style="flex:1; min-width: 250px; margin-right: 20px;">
+                   {{ form.name }}
+                  <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+               </div>
+               <div class="select-menu" style="flex:1; min-width: 250px;">
+                  <div class="select-btn">
+                     <span class="sBtn-text">Gruppe auswählen</span>
+                     <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul class="options">
+                      {% for value, label in form.group.field.choices %}
+                          <li class="option">
+                              <label>
+                                  <input type="radio" name="group" value="{{ value }}" {% if form.group.value == value %}checked{% endif %}>
+                                  <span class="option-text">{{ label }}</span>
+                              </label>
+                          </li>
+                      {% endfor %}
+                  </ul>
+               </div>
+               <div class="select-menu" style="flex:1; min-width: 250px;">
+                  <div class="select-btn">
+                     <span class="sBtn-text">Playbook auswählen</span>
+                     <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul class="options">
+                      {% for value, label in form.playbook.field.choices %}
+                          <li class="option">
+                              <label>
+                                  <input type="radio" name="playbook" value="{{ value }}" {% if form.playbook.value == value %}checked{% endif %}>
+                                  <span class="option-text">{{ label }}</span>
+                              </label>
+                          </li>
+                      {% endfor %}
+                  </ul>
+               </div>
+               <div class="select-menu" style="flex:1; min-width: 250px;">
+                  <div class="select-btn">
+                     <span class="sBtn-text">Inventory auswählen</span>
+                     <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <ul class="options">
+                      {% for value, label in form.inventory.field.choices %}
+                          <li class="option">
+                              <label>
+                                  <input type="radio" name="inventory" value="{{ value }}" {% if form.inventory.value == value %}checked{% endif %}>
+                                  <span class="option-text">{{ label }}</span>
+                              </label>
+                          </li>
+                      {% endfor %}
+                  </ul>
+               </div>
+            </div>
+            <div class="form-row">
+               <div style="width:100%" class="input-data focus-line half-length">
+                   {{ form.description }}
+                  <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+               </div>
+            </div>
+            <div class="form-row">
+               <button type="submit" class="submit-btn">Erstellen</button>
+            </div>
+         </form>
+      </div>
+      <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const selectButtons = document.querySelectorAll(".select-btn");
+
+  selectButtons.forEach(button => {
+    button.addEventListener("click", function() {
+      const optionsMenu = this.nextElementSibling;
+      optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
+      selectButtons.forEach(otherButton => {
+        if (otherButton !== button) {
+          otherButton.nextElementSibling.style.display = 'none';
+        }
+      });
+    });
+
+    const options = button.nextElementSibling.querySelectorAll("li");
+    options.forEach(option => {
+      option.addEventListener("click", function() {
+        const selectedText = this.querySelector(".option-text").textContent;
+        const selectedRadio = this.querySelector("input[type='radio']");
+        selectedRadio.checked = true;  // Marca o radio input como checked
+        button.querySelector(".sBtn-text").textContent = selectedText;
+        button.nextElementSibling.style.display = 'none'; // Fecha o menu após a seleção
+      });
+    });
+  });
+
+  document.addEventListener("click", function(e) {
+    if (!e.target.matches('.select-btn, .select-btn *, .options, .options *')) {
+      document.querySelectorAll(".options").forEach(optionsMenu => {
+        optionsMenu.style.display = 'none';
+      });
+    }
+  });
+});
+
+</script>
+   </body>
+</html>
