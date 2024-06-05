@@ -378,6 +378,7 @@ nav.close ~ .dashboard .top{
     padding: 0px; /* Espaçamento ao redor dos botões */
 }
 
+/** Some Comment */
 .button {
 	display: flex;
 	height: 24px;
