@@ -415,8 +415,6 @@ nav.close ~ .dashboard .top{
 	background: rgba(0, 0, 0, 0.08);
 }
 
-
-
 @media (max-width: 1000px) {
     nav{
         width: 73px;

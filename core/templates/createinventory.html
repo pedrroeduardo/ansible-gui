@@ -1,84 +1,94 @@
 {% load static %}
 <!DOCTYPE html>
-<!-- Created By CodingNepal -->
 <html lang="en" dir="ltr">
-   <head>
-      <meta charset="utf-8">
-      <title>Inventory erstellen</title>
-      <link rel="stylesheet" href="{% static 'css/../../static/admin/css/createinventory.css' %}">
-      <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   </head>
-   <body>
-      <div class="container">
-         <div class="text">Inventory erstellen</div>
-         <form method="post">
+<head>
+    <meta charset="utf-8">
+    <title>Inventory erstellen</title>
+    <link rel="stylesheet" href="{% static 'css/../../static/admin/css/createinventory.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <div class="text">Inventory erstellen</div>
+        <form method="post">
             {% csrf_token %}
             <div class="form-row">
-               <div class="input-data focus-line half-length" style="flex:1; min-width: 250px; margin-right: 20px;">
-                   {{ form.inventory_name }}
-                  <label for="{{ form.inventory_name.id_for_label }}">{{ form.inventory_name.label }}</label>
-               </div>
-               <div class="select-menu" style="flex:1; min-width: 250px;">
-                  <div class="select-btn">
-                     <span class="sBtn-text">Gruppe auswählen</span>
-                     <i class="bx bx-chevron-down"></i>
-                  </div>
-                  <ul class="options">
-                      {% for value, label in form.group.field.choices %}
-                          <li class="option">
-                              <label>
-                                  <input type="radio" name="group" value="{{ value }}" {% if form.group.value == value %}checked{% endif %}>
-                                  <span class="option-text">{{ label }}</span>
-                              </label>
-                          </li>
-                      {% endfor %}
-                  </ul>
-               </div>
+                <div class="input-data focus-line half-length" style="flex:1; min-width: 250px; margin-right: 20px;">
+                    {{ form.inventory_name }}
+                    <label for="{{ form.inventory_name.id_for_label }}">{{ form.inventory_name.label }}</label>
+                </div>
+                <div class="select-menu" style="flex:1; min-width: 250px;">
+                    <div class="select-btn">
+                        <span class="sBtn-text">Gruppe auswählen</span>
+                        <i class="bx bx-chevron-down"></i>
+                    </div>
+                    <ul class="options">
+                        {% for value, label in form.group.field.choices %}
+                        <li class="option">
+                            <label>
+                                <input type="radio" name="group" value="{{ value }}" {% if form.group.value == value %}checked{% endif %}>
+                                <span class="option-text">{{ label }}</span>
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <div class="form-row">
-               <div style="width:100%" class="input-data focus-line half-length">
-                   {{ form.description }}
-                  <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
-               </div>
+                <div style="width:100%" class="input-data focus-line half-length">
+                    {{ form.description }}
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                </div>
             </div>
             <div class="wrapper">
-               <span>Content</span>
+                <span>Content</span>
                 {{ form.content }}
             </div>
             <script>
-               const textarea = document.querySelector("textarea");
-               textarea.addEventListener("keyup", e =>{
-                 textarea.style.height = "63px";
-                 let scHeight = e.target.scrollHeight;
-                 textarea.style.height = `${scHeight}px`;
-               });
+                document.addEventListener("DOMContentLoaded", function() {
+                    const textarea = document.querySelector(".wrapper textarea");
+                    const contentLabel = document.querySelector(".wrapper span");
+
+                    function adjustTextareaHeight(element) {
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                        element.style.height = "63px";  // Reset the height
+                        let scHeight = element.scrollHeight;
+                        element.style.height = `${scHeight}px`;  // Set the height to the scroll height
+                        window.scrollTo(scrollLeft, scrollTop);  // Restore the scroll position
+                    }
+
+                    function updateLabel() {
+                        if (textarea.value !== "" || textarea === document.activeElement) {
+                            contentLabel.classList.add("active");
+                        } else {
+                            contentLabel.classList.remove("active");
+                        }
+                    }
+
+                    // Adjust the height when the page loads
+                    window.addEventListener('load', () => {
+                        adjustTextareaHeight(textarea);
+                        updateLabel();
+                    });
+
+                    // Adjust the height whenever the user types
+                    textarea.addEventListener("input", () => {
+                        adjustTextareaHeight(textarea);
+                        updateLabel();
+                    });
+
+                    // Handle the label state
+                    textarea.addEventListener("focus", updateLabel);
+                    textarea.addEventListener("blur", updateLabel);
+                });
             </script>
             <div class="form-row">
-               <button type="submit" class="submit-btn">Erstellen</button>
+                <button type="submit" class="submit-btn">Erstellen</button>
             </div>
-         </form>
-      </div>
-      <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
-      <script>
-         document.addEventListener("DOMContentLoaded", function() {
-           const textarea = document.querySelector(".wrapper textarea");
-           const contentLabel = document.querySelector(".wrapper span");
-
-           function updateLabel() {
-             if(textarea.value !== "" || textarea === document.activeElement) {
-               contentLabel.classList.add("active");
-             } else {
-               contentLabel.classList.remove("active");
-             }
-           }
-
-           textarea.addEventListener("keyup", updateLabel);
-           textarea.addEventListener("focus", updateLabel);
-           textarea.addEventListener("blur", updateLabel);
-
-           updateLabel();
-         });
-      </script>
-   </body>
+        </form>
+    </div>
+    <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
+</body>
 </html>

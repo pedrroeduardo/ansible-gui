@@ -152,7 +152,7 @@ def create_inventory(request):
 @login_required
 def create_playbook(request):
     if request.method == 'POST':
-        form = InventoryForm(request.POST)
+        form = PlaybookForm(request.POST)
         if form.is_valid():
             playbook_name = form.cleaned_data['inventory_name']
             group = form.cleaned_data['group']
@@ -171,7 +171,7 @@ def create_playbook(request):
         else:
             print("Formulário inválido", form.errors)  # Mostra os erros de validação
     else:
-        form = InventoryForm()
+        form = PlaybookForm()
 
     return render(request, "createplaybook.html", {'form': form})
 
