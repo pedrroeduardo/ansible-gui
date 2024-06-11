@@ -1,6 +1,7 @@
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
+import django
 from .forms import *
 from ldap3.core.exceptions import LDAPException
 from django.contrib.auth.decorators import login_required
@@ -59,12 +60,14 @@ def index(request):
                         group_name = "Fachgruppenübergreifend"
 
                         try:
-                            group = Group.objects.get(name=group_name)
+                            group = django.contrib.auth.models.Group.objects.get(name=group_name)
+                            print(group)
                             user.groups.add(group)
+                            print("Good")
+                            return redirect('dashboard/')
                         except Group.DoesNotExist:
+                            print("No good")
                             error_message = "Grupo não encontrado."
-
-                        return redirect('dashboard/')
                     else:
                         error_message = 'Benutzername oder Passwort ist falsch'
                 else:
@@ -86,10 +89,10 @@ def dashboard(request):
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+    if "Fachgruppe Leitung" in user_group_names:
         jobs_runned = JobRunned.objects.all()
     else:
-        jobs_runned = JobRunned.objects.filter(group__in=core_groups)
+        jobs_runned = JobRunned.objects.filter(job__group__in=core_groups)
 
     return render(request, "dashboard.html", {"jobs": jobs_runned})
 
@@ -109,7 +112,7 @@ def inventory(request):
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+    if "Fachgruppe Leitung" in user_group_names:
         inventory = Inventory.objects.all()
     else:
         inventory = Inventory.objects.filter(group__in=core_groups)
@@ -126,7 +129,7 @@ def playbook(request):
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+    if "Fachgruppe Leitung" in user_group_names:
         playbook = Playbook.objects.all()
     else:
         playbook = Playbook.objects.filter(group__in=core_groups)
@@ -193,7 +196,7 @@ def create_job(request):
     user_group_names = list(user_group_names)
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+    if "Fachgruppe Leitung" in user_group_names:
         playbook = Playbook.objects.all()
         inventory = Inventory.objects.all()
     else:
@@ -285,7 +288,7 @@ def item_job_details(request, id):
     user_group_names = list(user_group_names)
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+    if "Fachgruppe Leitung" in user_group_names:
         playbook = Playbook.objects.all()
         inventory = Inventory.objects.all()
     else:
@@ -399,7 +402,7 @@ def jobs(request):
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+    if "Fachgruppe Leitung" in user_group_names:
         job = Job.objects.all()
     else:
         job = Job.objects.filter(group__in=core_groups)

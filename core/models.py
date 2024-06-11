@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Group(models.Model):
@@ -65,8 +65,7 @@ class JobRunned(models.Model):
     has_run = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Run of {self.job.name} by {self.username}"
+        return f"Run of {self.job.name} by {self.username} - ID #{self.id}"
 
     class Meta:
         verbose_name_plural = "Job Runs"
-
