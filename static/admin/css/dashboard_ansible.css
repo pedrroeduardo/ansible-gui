@@ -330,7 +330,7 @@ nav.close ~ .dashboard .top{
 .dash-content .activity .activity-data{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* Updated to align items at the start */
     width: 100%;
 }
 .activity .activity-data{
@@ -339,20 +339,119 @@ nav.close ~ .dashboard .top{
 .activity-data .data{
     display: flex;
     flex-direction: column;
-    margin: 0 15px;
+    margin: 0 5px;
 }
+
+.activity-data .data.action {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px; /* Adjusted margin for better spacing */
+}
+
+.activity-data .data-action {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 10px; /* Ensure space between title and lists */
+}
+
+.activity-data .data.action .data-list {
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 10px;
+    white-space: nowrap;
+    color: var(--text-color);
+}
+
 .activity-data .data-title{
     font-size: 20px;
     font-weight: 500;
     color: var(--text-color);
+    margin-bottom: 10px; /* Added to give space between title and lists */
 }
 .activity-data .data .data-list{
     font-size: 18px;
     font-weight: 400;
-    margin-top: 20px;
+    margin-top: 10px;
     white-space: nowrap;
     color: var(--text-color);
 }
+.activity-data .data.status .btn {
+    margin-bottom: 10px; /* Add space between buttons */
+}
+
+.activity-data {
+    display: flex;
+    justify-content: space-between; /* Evenly distribute space between columns */
+    align-items: flex-start;
+    width: 100%;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px; /* Reduced padding for smaller buttons */
+    border: none;
+    border-radius: 15px; /* More rounded corners */
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn i {
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+.success {
+    background-color: #28a745;
+}
+
+.success:hover {
+    background-color: #218838;
+}
+
+.failed {
+    background-color: #dc3545;
+}
+
+.failed:hover {
+    background-color: #c82333;
+}
+
+.running {
+    background-color: #007bff;
+}
+
+.running:hover {
+    background-color: #0069d9;
+}
+
+/* Botão Run */
+.btn.run {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    background-color: #007bff; /* Azul clássico */
+    border: none;
+    border-radius: 15px; /* Bordas arredondadas iguais aos outros botões */
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline from the link */
+    transition: background-color 0.3s ease;
+}
+
+.btn.run i {
+    margin-right: 6px; /* Mesma margem dos ícones dos outros botões */
+    font-size: 18px;
+}
+
+.btn.run:hover {
+    background-color: #0056b3; /* Azul mais escuro no hover */
+}
+
 @media (max-width: 1000px) {
     nav{
         width: 73px;

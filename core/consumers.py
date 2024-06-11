@@ -53,10 +53,16 @@ class RunJobConsumer(WebsocketConsumer):
         self.run_ssh_command(f"echo '{playbook.content}' > /home/netadmin/ansible/playbook.yml", ssh_client)
         self.run_ssh_command(f"echo '{inventory.content}' > /home/netadmin/ansible/inventory", ssh_client)
 
-        self.run_ssh_command(
+        output = self.run_ssh_command(
             "ansible-playbook /home/netadmin/ansible/playbook.yml -i /home/netadmin/ansible/inventory", ssh_client)
 
         self.run_ssh_command("rm -rf /home/netadmin/ansible/playbook.yml /home/netadmin/ansible/inventory", ssh_client)
 
         self.run_ssh_command("rm -rf ansible/playbook.yml ansible/inventory", ssh_client)
         self.run_ssh_command("rm -rf /tmp/vault_password.txt", ssh_client)
+
+        job_run.output = output
+        job_run.has_run = True
+        job_run.save()
+
+

@@ -79,7 +79,19 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    return render(request, "dashboard.html")
+    # Obtendo os nomes dos grupos do usuário
+    user_group_names = request.user.groups.all().values_list('name', flat=True)
+    user_group_names = list(user_group_names)  # Convertendo para lista
+
+    # Buscando os grupos correspondentes no modelo Core
+    core_groups = Group.objects.filter(name__in=user_group_names)
+
+    if "Fachgruppe Leitung" in user_group_names or "Fachgruppenübergreifend" in user_group_names:
+        jobs_runned = JobRunned.objects.all()
+    else:
+        jobs_runned = JobRunned.objects.filter(group__in=core_groups)
+
+    return render(request, "dashboard.html", {"jobs": jobs_runned})
 
 
 @login_required

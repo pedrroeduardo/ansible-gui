@@ -61,6 +61,8 @@ class JobRunned(models.Model):
     username = models.CharField(max_length=8)
     output = models.TextField()
     status = models.ForeignKey(Status, on_delete=models.CASCADE, related_name='job_runs')
+    start_time = models.DateTimeField(auto_now=True)
+    has_run = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Run of {self.job.name} by {self.username}"
