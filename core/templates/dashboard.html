@@ -95,17 +95,17 @@
                         <span class="data-title">Status</span>
                         {% for item in jobs %}
                             {% if item.status.name == "Fehlgeschlagen" %}
-                                <button class="btn failed">
+                                <button disabled class="btn failed">
                                     <i class="uil uil-exclamation-triangle"></i>
                                     Fehlgeschlagen
                                 </button>
                             {% elif item.status.name == "Erfolgreich" %}
-                                <button class="btn success">
+                                <button disabled class="btn success">
                                     <i class="uil uil-check-circle"></i>
                                     Erfolgreich
                                 </button>
                             {% else %}
-                                <button class="btn running">
+                                <button disabled class="btn running">
                                     <i class="uil uil-sync"></i>
                                     Laufend
                                 </button>

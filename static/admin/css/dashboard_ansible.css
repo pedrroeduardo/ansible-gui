@@ -406,26 +406,17 @@ nav.close ~ .dashboard .top{
 
 .success {
     background-color: #28a745;
-}
-
-.success:hover {
-    background-color: #218838;
+    pointer-events: none;
 }
 
 .failed {
     background-color: #dc3545;
-}
-
-.failed:hover {
-    background-color: #c82333;
+    pointer-events: none;
 }
 
 .running {
     background-color: #007bff;
-}
-
-.running:hover {
-    background-color: #0069d9;
+    pointer-events: none;
 }
 
 /* Botão Run */
