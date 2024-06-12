@@ -35,11 +35,11 @@ class InventoryForm(forms.Form):
             'spellcheck': 'false',
             'required': 'required'
         }),
-        initial='[loh306] \n'
-                'LOH306-SWT01 ansible_host=10.20.20.10\n'
-                'LOH306-SWT02 ansible_host=10.20.20.11\n'
-                'LOH306-SWT03 ansible_host=10.20.20.12\n\n'
-                '[loh306:vars]\n'
+        initial='[(GROUP NAME)] \n'
+                '[NAME] ansible_host=[IP-Adresse]\n'
+                '[NAME] ansible_host=[IP-Adresse]\n'
+                '[NAME] ansible_host=[IP-Adresse]\n\n'
+                '[(GROUP NAME):vars]\n'
                 'ansible_network_os=community.ciscosmb.ciscosmb\n'
                 'ansible_connection=network_cli\n'
                 'ansible_user="{{ ansible_username }}"\n'
@@ -75,8 +75,23 @@ class PlaybookForm(forms.Form):
             'spellcheck': 'false',
             'required': 'required'
         }),
-        initial='---\n- name: SNMP Erstellen\n  hosts: loh306\n  gather_facts: no\n\n  vars_files:\n    - credentials.yml\n\n  tasks:\n    - name: Creating SNMP\n      community.ciscosmb.command:\n        commands:\n          - sh run'
+        initial='---\n'
+                '- name: [PLAYBOOK NAME]\n'
+                '  hosts: all\n'
+                '  gather_facts: no\n\n'
+                '  vars_files:\n'
+                '    - credentials.yml\n\n'
+                '  tasks:\n'
+                '    - name: [TASK NAME]\n'
+                '      community.ciscosmb.command:\n'
+                '        commands:\n'
+                '          - sh run\n'
+                '      register: sh_run_output\n\n'
+                '    - name: Print command output\n'
+                '      debug:\n'
+                '        var: sh_run_output.stdout\n'
     )
+
 
 class JobForm(forms.Form):
     name = forms.CharField(

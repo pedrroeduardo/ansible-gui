@@ -7,6 +7,7 @@ from ldap3.core.exceptions import LDAPException
 from django.contrib.auth.decorators import login_required
 from .models import *
 from django.shortcuts import get_object_or_404
+import re
 
 import ldap3
 
@@ -429,7 +430,7 @@ def run_job(request, id):
 def details_run_job(request, id):
     job = get_object_or_404(JobRunned, id=id)
 
-    # Processar a saída para remover linhas em branco adicionais
-    processed_output = "\n".join([line for line in job.output.splitlines() if line.strip() != ""])
+    output = re.sub(r'\\n', '\n', job.output)
+    processed_output = "\n".join([line for line in output.splitlines() if line.strip() != ""])
 
     return render(request, 'job_details.html', {'job': job, 'processed_output': processed_output})
