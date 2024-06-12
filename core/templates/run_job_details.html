@@ -9,32 +9,37 @@
     <div id="messages"></div>
 
     <script>
-        const jobRunnedId = "{{ job_id }}";
-        const ws = new WebSocket(`wss://${window.location.host}/ws/run_job/${jobRunnedId}/`);
+    const jobRunnedId = "{{ job_id }}";
+    const ws = new WebSocket(`wss://${window.location.host}/ws/run_job/${jobRunnedId}/`);
 
-        ws.onopen = function() {
-            console.log('WebSocket is connected.');
-            addMessage('WebSocket is connected.');
-            ws.send(JSON.stringify({'job_runned_id': jobRunnedId}));
-        };
+    ws.onopen = function() {
+        console.log('WebSocket is connected.');
+        addMessage('WebSocket is connected.');
+        ws.send(JSON.stringify({'job_runned_id': jobRunnedId}));
+    };
 
-        ws.onmessage = function(event) {
-            const message = JSON.parse(event.data).message;
-            console.log('Received:', message);
-            addMessage(message);
-        };
-
-        ws.onclose = function() {
-            console.log('WebSocket is closed.');
-            addMessage('WebSocket is closed.');
-        };
-
-        function addMessage(message) {
-            const messageDiv = document.getElementById('messages');
-            const newMessage = document.createElement('div');
-            newMessage.textContent = message;
-            messageDiv.appendChild(newMessage);
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.redirect) {
+            window.location.href = data.url;
+        } else if (data.message) {
+            console.log('Received:', data.message);
+            addMessage(data.message);
         }
-    </script>
+    };
+
+    ws.onclose = function() {
+        console.log('WebSocket is closed.');
+        addMessage('WebSocket is closed.');
+    };
+
+    function addMessage(message) {
+        const messageDiv = document.getElementById('messages');
+        const newMessage = document.createElement('div');
+        newMessage.textContent = message;
+        messageDiv.appendChild(newMessage);
+    }
+</script>
+
 </body>
 </html>

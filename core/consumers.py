@@ -1,11 +1,14 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 import paramiko
 from asgiref.sync import sync_to_async
 import logging
+import time
 
 logger = logging.getLogger(__name__)
+
 
 class RunJobConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -18,7 +21,11 @@ class RunJobConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         job_id = self.scope['url_route']['kwargs']['id']
         logger.info(f"Received job ID: {job_id}")
-        await self.run_job(job_id)
+        try:
+            await self.run_job(job_id)
+        except Http404:
+            await self.send(text_data=json.dumps({"redirect": True, "url": "/dashboard"}))
+            await self.close()
 
     async def establish_ssh_connection(self, hostname, username, password):
         connection = paramiko.SSHClient()
@@ -53,7 +60,7 @@ class RunJobConsumer(AsyncWebsocketConsumer):
         try:
             job_run = JobRunned.objects.get(id=job_run_id)
             job_run.output = output
-            job_run.is_run = True
+            job_run.has_run = True
             job_run.save()
             return job_run
         except JobRunned.DoesNotExist:
@@ -62,7 +69,10 @@ class RunJobConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def get_job_run(self, job_id):
         from .models import JobRunned
-        return get_object_or_404(JobRunned, id=job_id)
+        job_run = get_object_or_404(JobRunned, id=job_id)
+        if job_run.has_run:
+            raise Http404("Job already executed")
+        return job_run
 
     @sync_to_async
     def get_job(self, job_id):
@@ -72,6 +82,7 @@ class RunJobConsumer(AsyncWebsocketConsumer):
     async def run_job(self, job_id):
         logger.info("Starting job.")
         job_run = await self.get_job_run(int(job_id))
+
         job = await sync_to_async(lambda: job_run.job)()  # Ensure job is fetched asynchronously
         playbook = await sync_to_async(lambda: job.playbook)()
         inventory = await sync_to_async(lambda: job.inventory)()
@@ -110,7 +121,11 @@ class RunJobConsumer(AsyncWebsocketConsumer):
             logger.error(f"Error during job execution: {e}")
         finally:
             logger.info("Cleaning up.")
-            await self.run_ssh_command("rm -rf /home/netadmin/ansible/playbook.yml /home/netadmin/ansible/inventory", ssh_client)
+            await self.run_ssh_command("rm -rf /home/netadmin/ansible/playbook.yml /home/netadmin/ansible/inventory",
+                                       ssh_client)
             await self.run_ssh_command("rm -rf ansible/playbook.yml ansible/inventory", ssh_client)
             await self.run_ssh_command("rm -rf /tmp/vault_password.txt", ssh_client)
+            time.sleep(5)
+            await self.send(text_data=json.dumps({"redirect": True, "url": "/dashboard"}))
+
             ssh_client.close()
