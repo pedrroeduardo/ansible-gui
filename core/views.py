@@ -423,3 +423,13 @@ def create_new_job_run(request, id):
 @login_required
 def run_job(request, id):
     return render(request, 'run_job_details.html', {'job_id': id})
+
+
+@login_required
+def details_run_job(request, id):
+    job = get_object_or_404(JobRunned, id=id)
+
+    # Processar a saída para remover linhas em branco adicionais
+    processed_output = "\n".join([line for line in job.output.splitlines() if line.strip() != ""])
+
+    return render(request, 'job_details.html', {'job': job, 'processed_output': processed_output})

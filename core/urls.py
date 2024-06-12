@@ -16,5 +16,6 @@ urlpatterns = [
     path("jobs/create-job/", create_job, name="create-job"),
     path("jobs/details/<int:id>", item_job_details, name="job_details"),
     path("jobs/run/create/<int:id>/", create_new_job_run, name="create-run-job"),
-    path("jobs/run/<int:id>", run_job, name="run-job")
+    path("jobs/run/<int:id>", run_job, name="run-job"),
+    path("jobs/run/details/<int:id>", details_run_job, name="details-run-job")
 ]

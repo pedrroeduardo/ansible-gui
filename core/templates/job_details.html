@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WebSocket Test</title>
+    <title>Details Job</title>
 
-            <!-- Favicon para navegadores -->
+        <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
@@ -28,43 +28,12 @@
     <meta name="msapplication-square70x70logo" content="{% static 'css/../../static/admin/icons/mstile-70x70.png' %}">
     <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
     <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
+
 </head>
 <body>
-    <h1>WebSocket Test - Job {{ job_id }}</h1>
-    <div id="messages"></div>
-
-    <script>
-    const jobRunnedId = "{{ job_id }}";
-    const ws = new WebSocket(`wss://${window.location.host}/ws/run_job/${jobRunnedId}/`);
-
-    ws.onopen = function() {
-        console.log('WebSocket is connected.');
-        addMessage('WebSocket is connected.');
-        ws.send(JSON.stringify({'job_runned_id': jobRunnedId}));
-    };
-
-    ws.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        if (data.redirect) {
-            window.location.href = data.url;
-        } else if (data.message) {
-            console.log('Received:', data.message);
-            addMessage(data.message);
-        }
-    };
-
-    ws.onclose = function() {
-        console.log('WebSocket is closed.');
-        addMessage('WebSocket is closed.');
-    };
-
-    function addMessage(message) {
-        const messageDiv = document.getElementById('messages');
-        const newMessage = document.createElement('div');
-        newMessage.textContent = message;
-        messageDiv.appendChild(newMessage);
-    }
-</script>
-
+    <h1>Details - Job {{ job.id }}</h1>
+    <div id="messages">
+        <pre>{{ processed_output }}</pre>
+    </div>
 </body>
 </html>

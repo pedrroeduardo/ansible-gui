@@ -56,14 +56,61 @@ class RunJobConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def update_job_status(self, job_run_id, output):
-        from .models import JobRunned
+        from .models import JobRunned, Status
+
         try:
             job_run = JobRunned.objects.get(id=job_run_id)
             job_run.output = output
             job_run.has_run = True
             job_run.save()
+
+            recap_lines = [line for line in output.splitlines() if line.startswith('PLAY RECAP')]
+            failed_tasks = 0
+            unreachable_hosts = 0
+
+            error_keywords = ["ERROR!", "fatal:", "UNREACHABLE"]
+            critical_error = any(keyword in output for keyword in error_keywords)
+
+            if recap_lines:
+                logger.info("Found PLAY RECAP")
+                recap_index = output.splitlines().index(recap_lines[0])
+                for line in output.splitlines()[recap_index:]:
+                    if "failed=" in line:
+                        failed_tasks += int(line.split("failed=")[1].split()[0])
+                    if "unreachable=" in line:
+                        unreachable_hosts += int(line.split("unreachable=")[1].split()[0])
+
+                if failed_tasks > 0 or unreachable_hosts > 0:
+                    logger.info("Setting status to Fehlgeschlagen")
+                    status = Status.objects.get(name="Fehlgeschlagen")
+                    logger.info(f"Status found: {status}")
+                    job_run.status = status
+                    job_run.save()
+                else:
+                    logger.info("Setting status to Erfolgreich")
+                    status = Status.objects.get(name="Erfolgreich")
+                    logger.info(f"Status found: {status}")
+                    job_run.status = status
+                    job_run.save()
+            elif critical_error:
+                logger.info("Found critical error")
+                status = Status.objects.get(name="Fehlgeschlagen")
+                logger.info(f"Status found: {status}")
+                job_run.status = status
+                job_run.save()
+            else:
+                logger.info("Setting status to Fehlgeschlagen due to unknown error")
+                status = Status.objects.get(name="Fehlgeschlagen")
+                logger.info(f"Status found: {status}")
+                job_run.status = status
+                job_run.save()
+
             return job_run
         except JobRunned.DoesNotExist:
+            logger.info("JobRunned does not Exist")
+            return None
+        except Status.DoesNotExist:
+            logger.info("Status does not Exist")
             return None
 
     @sync_to_async
