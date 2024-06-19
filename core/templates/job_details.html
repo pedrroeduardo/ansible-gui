@@ -3,37 +3,70 @@
 <html>
 <head>
     <title>Details Job</title>
+    <link rel="stylesheet" href="{% static 'admin/css/job_details.css' %}">
 
-        <!-- Favicon para navegadores -->
-    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
-    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
-    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
-    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-96x96.png' %}" sizes="96x96">
+    <!-- Iconscout CSS -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <!-- Favicon para navegadores -->
+    <link rel="icon" href="{% static 'admin/icons/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'admin/icons/favicon-16x16.png' %}" sizes="16x16">
+    <link rel="icon" href="{% static 'admin/icons/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" href="{% static 'admin/icons/favicon-96x96.png' %}" sizes="96x96">
 
     <!-- Favicon para dispositivos Apple -->
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-57x57.png' %}" sizes="57x57">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-60x60.png' %}" sizes="60x60">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-72x72.png' %}" sizes="72x72">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-76x76.png' %}" sizes="76x76">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-114x114.png' %}" sizes="114x114">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-120x120.png' %}" sizes="120x120">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-144x144.png' %}" sizes="144x144">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-152x152.png' %}" sizes="152x152">
-    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-180x180.png' %}" sizes="180x180">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-57x57.png' %}" sizes="57x57">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-60x60.png' %}" sizes="60x60">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-72x72.png' %}" sizes="72x72">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-76x76.png' %}" sizes="76x76">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-114x114.png' %}" sizes="114x114">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-120x120.png' %}" sizes="120x120">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-144x144.png' %}" sizes="144x144">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-152x152.png' %}" sizes="152x152">
+    <link rel="apple-touch-icon" href="{% static 'admin/icons/apple-touch-icon-180x180.png' %}" sizes="180x180">
 
     <!-- Favicon para Android -->
-    <link rel="icon" href="{% static 'css/../../static/admin/icons/android-icon-192x192.png' %}" sizes="192x192" type="image/png">
+    <link rel="icon" href="{% static 'admin/icons/android-icon-192x192.png' %}" sizes="192x192" type="image/png">
 
     <!-- Favicon para Windows -->
-    <meta name="msapplication-square70x70logo" content="{% static 'css/../../static/admin/icons/mstile-70x70.png' %}">
-    <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
-    <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
-
+    <meta name="msapplication-square70x70logo" content="{% static 'admin/icons/mstile-70x70.png' %}">
+    <meta name="msapplication-square150x150logo" content="{% static 'admin/icons/mstile-150x150.png' %}">
+    <meta name="msapplication-square310x310logo" content="{% static 'admin/icons/mstile-310x310.png' %}">
 </head>
 <body>
-    <h1>Details - Job {{ job.id }}</h1>
-    <div id="messages">
-        <pre>{{ processed_output }}</pre>
+    <div class="container">
+        <div class="header">
+            <div class="title">{{ jobs.job.name }}</div>
+            <div class="task-id">Task #{{ jobs.id }}</div>
+            <a href="{% url 'dashboard' %}" class="close-link">X</a>
+        </div>
+        {% if jobs.status.name == "Fehlgeschlagen" %}
+            <button disabled class="btn failed">
+                <i class="uil uil-exclamation-triangle"></i>
+                Fehlgeschlagen
+            </button>
+        {% elif jobs.status.name == "Erfolgreich" %}
+            <button disabled class="btn success">
+                <i class="uil uil-check-circle"></i>
+                Erfolgreich
+            </button>
+        {% else %}
+            <button disabled class="btn running">
+                <i class="uil uil-sync"></i>
+                Laufend
+            </button>
+        {% endif %}
+        <div class="details">
+            <div class="detail-item">Author: <b>{{ jobs.username }}</b></div>
+            <div class="detail-item">Playbook: <b>{{ jobs.job.playbook.name }}</b></div>
+            <div class="detail-item">Inventory: <b>{{ jobs.job.inventory.name }}</b></div>
+            <div class="detail-item">Started: <b>{{ jobs.start_time }}</b></div>
+        </div>
+        <div class="wrapper">
+            <pre class="log" id="log-content">
+                {{ processed_output }}
+            </pre>
+        </div>
     </div>
 </body>
 </html>

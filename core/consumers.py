@@ -172,7 +172,7 @@ class RunJobConsumer(AsyncWebsocketConsumer):
                                        ssh_client)
             await self.run_ssh_command("rm -rf ansible/playbook.yml ansible/inventory", ssh_client)
             await self.run_ssh_command("rm -rf /tmp/vault_password.txt", ssh_client)
-            time.sleep(5)
-            await self.send(text_data=json.dumps({"redirect": True, "url": "/dashboard"}))
+
+            await self.send(text_data=json.dumps({"redirect": True, "url": f"/jobs/run/details/{job_id}"}))
 
             ssh_client.close()

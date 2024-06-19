@@ -423,7 +423,8 @@ def create_new_job_run(request, id):
 
 @login_required
 def run_job(request, id):
-    return render(request, 'run_job_details.html', {'job_id': id})
+    job = get_object_or_404(JobRunned, id=id)
+    return render(request, 'run_job_details.html', {'job_id': id, "jobs": job})
 
 
 @login_required
@@ -433,4 +434,4 @@ def details_run_job(request, id):
     output = re.sub(r'\\n', '\n', job.output)
     processed_output = "\n".join([line for line in output.splitlines() if line.strip() != ""])
 
-    return render(request, 'job_details.html', {'job': job, 'processed_output': processed_output})
+    return render(request, 'job_details.html', {'jobs': job, 'processed_output': processed_output})

@@ -1,0 +1,143 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.task-id {
+    font-size: 18px;
+    margin-right: 40px; /* Add margin to the right of task-id */
+}
+
+.status {
+    background-color: #4CAF50;
+    text-align: left;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.detail-item {
+    flex: 1;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+}
+
+.wrapper .log {
+    width: calc(100% - 20px);
+    height: 500px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow-y: scroll;
+    background-color: #1e1e1e;
+    color: #fff;
+    margin: 0 auto;
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+}
+
+/* Custom scrollbar styles */
+.wrapper .log::-webkit-scrollbar {
+    width: 8px;
+}
+
+.wrapper .log::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.wrapper .log::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.wrapper .log::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.close-link {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px; /* Reduced padding for smaller buttons */
+    border: none;
+    border-radius: 15px; /* More rounded corners */
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px;
+}
+.btn i {
+    margin-right: 5px;
+    font-size: 16px;
+}
+.success {
+    background-color: #28a745;
+    pointer-events: none;
+}
+.failed {
+    background-color: #dc3545;
+    pointer-events: none;
+}
+.running {
+    background-color: #007bff;
+    pointer-events: none;
+}

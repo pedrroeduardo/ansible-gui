@@ -2,7 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WebSocket Test</title>
+    <title>{{ jobs.job.name }} wird Ausgeführt</title>
+
+    <link rel="stylesheet" href="{% static 'admin/css/job_details.css' %}">
+
+    <!-- Iconscout CSS -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
             <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
@@ -30,7 +35,26 @@
     <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
 </head>
 <body>
-    <h1>WebSocket Test - Job {{ job_id }}</h1>
+<div class="container">
+        <div class="header">
+            <div class="title">{{ jobs.job.name }}</div>
+            <div class="task-id">Task #{{ jobs.id }}</div>
+            <a href="{% url 'dashboard' %}" class="close-link">X</a>
+        </div>
+        <button disabled class="btn running">
+            <i class="uil uil-sync"></i>
+                Laufend
+        </button>
+        <div class="details">
+            <div class="detail-item">Author: <b>{{ jobs.username }}</b></div>
+            <div class="detail-item">Playbook: <b>{{ jobs.job.playbook.name }}</b></div>
+            <div class="detail-item">Inventory: <b>{{ jobs.job.inventory.name }}</b></div>
+            <div class="detail-item">Started: <b>{{ jobs.start_time }}</b></div>
+        </div>
+        <div class="wrapper">
+            <pre class="log" id="log-content"></pre>
+        </div>
+    </div>
     <div id="messages"></div>
 
     <script>
@@ -39,7 +63,6 @@
 
     ws.onopen = function() {
         console.log('WebSocket is connected.');
-        addMessage('WebSocket is connected.');
         ws.send(JSON.stringify({'job_runned_id': jobRunnedId}));
     };
 
@@ -55,11 +78,10 @@
 
     ws.onclose = function() {
         console.log('WebSocket is closed.');
-        addMessage('WebSocket is closed.');
     };
 
     function addMessage(message) {
-        const messageDiv = document.getElementById('messages');
+        const messageDiv = document.getElementById('log-content');
         const newMessage = document.createElement('div');
         newMessage.textContent = message;
         messageDiv.appendChild(newMessage);
