@@ -372,12 +372,12 @@ nav.close ~ .dashboard .top{
 .activity-data .data .data-list{
     font-size: 18px;
     font-weight: 400;
-    margin-top: 10px;
+    margin-top: 14px;
     white-space: nowrap;
     color: var(--text-color);
 }
 .activity-data .data.status .btn {
-    margin-bottom: 10px; /* Add space between buttons */
+    margin-top: 10px;
 }
 
 .activity-data {
@@ -390,7 +390,7 @@ nav.close ~ .dashboard .top{
 .btn {
     display: flex;
     align-items: center;
-    padding: 5px 10px; /* Reduced padding for smaller buttons */
+    padding: 3px 5px; /* Reduced padding for smaller buttons */
     border: none;
     border-radius: 15px; /* More rounded corners */
     color: white;
@@ -421,7 +421,7 @@ nav.close ~ .dashboard .top{
 
 /* Botão Run */
 .btn.run {
-    margin-bottom: 5px;
+    margin-top: 8px;
     display: flex;
     align-items: center;
     background-color: #007bff; /* Azul clássico */
