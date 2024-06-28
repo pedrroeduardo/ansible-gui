@@ -297,6 +297,69 @@ nav.close ~ .dashboard .top{
     justify-content: space-between;
     flex-wrap: wrap;
 }
+
+
+.activity-data .data, .activity-data .new-column {
+    flex: 1 1 0; /* Permite que as colunas tenham a mesma largura */
+    min-width: 150px; /* Define uma largura mínima para as colunas */
+    max-width: 200px; /* Define uma largura máxima para as colunas */
+    overflow: hidden; /* Garante que o conteúdo não ultrapasse os limites da coluna */
+}
+
+.activity-data .new-column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 15px;
+}
+
+.activity-data .new-column .data-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.activity-data .new-column .data-list {
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 20px;
+    white-space: nowrap;
+    color: var(--text-color);
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: nowrap; /* Mantém as tags em uma única linha */
+    gap: 5px;
+    max-width: 200px; /* Limite de largura */
+    overflow-x: auto; /* Adiciona rolagem horizontal */
+    border-radius: 5px;
+    margin-top: 13px;
+}
+
+.tag {
+    background-color: var(--primary-color);
+    color: var(--title-icon-color);
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    white-space: nowrap; /* Garante que o texto da tag não quebre em várias linhas */
+}
+
+.show-more {
+    background-color: var(--primary-color);
+    color: var(--title-icon-color);
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.show-more:hover {
+    background-color: #0073a1;
+}
+
 .dash-content .boxes .box{
     display: flex;
     flex-direction: column;

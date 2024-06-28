@@ -8,7 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <!-- Favicon para navegadores -->
+    <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
@@ -64,6 +64,41 @@
                 <div style="width:100%" class="input-data focus-line half-length">
                     {{ form.description }}
                     <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                </div>
+            </div>
+            <!-- Tag Selection -->
+            <div class="form-row">
+                <div class="tag-container">
+                    <div class="tag-list" id="available-tags">
+                        <h3>Verfügbare tags</h3>
+                        <ul>
+                            {% for value, label in form.available_tags.field.choices %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" value="{{ value }}">
+                                        <span class="option-text">{{ label }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" id="add-button">→</button>
+                        <button type="button" id="remove-button">←</button>
+                    </div>
+                    <div class="tag-list" id="selected-tags">
+                        <h3>Ausgewählte tags</h3>
+                        <ul>
+                            {% for value, label in form.selected_tags.field.choices %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="selected_tags" value="{{ value }}" checked>
+                                        <span class="option-text">{{ label }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="wrapper">
@@ -142,5 +177,78 @@
         </form>
     </div>
     <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const selectButtons = document.querySelectorAll(".select-btn");
+
+            selectButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const optionsMenu = this.nextElementSibling;
+                    optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
+                    selectButtons.forEach(otherButton => {
+                        if (otherButton !== button) {
+                            otherButton.nextElementSibling.style.display = 'none';
+                        }
+                    });
+                });
+
+                const options = button.nextElementSibling.querySelectorAll("li");
+                options.forEach(option => {
+                    option.addEventListener("click", function() {
+                        const selectedText = this.querySelector(".option-text").textContent;
+                        const selectedRadio = this.querySelector("input[type='radio']");
+                        selectedRadio.checked = true;
+                        button.querySelector(".sBtn-text").textContent = selectedText;
+                        button.nextElementSibling.style.display = 'none';
+                    });
+                });
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!e.target.matches('.select-btn, .select-btn *, .options, .options *')) {
+                    document.querySelectorAll(".options").forEach(optionsMenu => {
+                        optionsMenu.style.display = 'none';
+                    });
+                }
+            });
+
+            const addButton = document.getElementById('add-button');
+            const removeButton = document.getElementById('remove-button');
+
+            addButton.addEventListener('click', function() {
+                moveSelectedTags('available-tags', 'selected-tags');
+            });
+
+            removeButton.addEventListener('click', function() {
+                moveSelectedTags('selected-tags', 'available-tags');
+            });
+
+            function moveSelectedTags(fromId, toId) {
+                const fromList = document.getElementById(fromId).querySelector('ul');
+                const toList = document.getElementById(toId).querySelector('ul');
+                const selectedTags = fromList.querySelectorAll('li input:checked');
+
+                selectedTags.forEach(tag => {
+                    const listItem = tag.closest('li');
+                    listItem.querySelector('input').checked = false;
+                    listItem.querySelector('input').name = 'selected_tags';
+                    toList.appendChild(listItem);
+                });
+            }
+
+            document.querySelectorAll('.tag-list input[type="checkbox"]').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.closest('li').classList.toggle('selected', this.checked);
+                });
+            });
+
+            document.querySelector('form').addEventListener('submit', function() {
+                document.querySelectorAll('#selected-tags input[type="checkbox"]').forEach(input => {
+                    input.checked = true;
+                    input.name = "selected_tags";
+                });
+            });
+        });
+    </script>
 </body>
 </html>

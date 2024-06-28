@@ -8,7 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            <!-- Favicon para navegadores -->
+    <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
@@ -66,54 +66,146 @@
                     <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
                 </div>
             </div>
+            <!-- Tag Selection -->
+            <div class="form-row">
+                <div class="tag-container">
+                    <div class="tag-list" id="available-tags">
+                        <h3>Verfügbare tags</h3>
+                        <ul>
+                            {% for value, label in form.available_tags.field.choices %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="available_tags" value="{{ value }}">
+                                        <span class="option-text">{{ label }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" id="add-button">→</button>
+                        <button type="button" id="remove-button">←</button>
+                    </div>
+                    <div class="tag-list" id="selected-tags">
+                        <h3>Ausgewählte tags</h3>
+                        <ul>
+                            {% for value, label in form.selected_tags.field.choices %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="selected_tags" value="{{ value }}" checked>
+                                        <span class="option-text">{{ label }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div class="wrapper">
                 <span>Content</span>
                 {{ form.content }}
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const textarea = document.querySelector(".wrapper textarea");
-                    const contentLabel = document.querySelector(".wrapper span");
-
-                    function adjustTextareaHeight(element) {
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-                        element.style.height = "63px";  // Reset the height
-                        let scHeight = element.scrollHeight;
-                        element.style.height = `${scHeight}px`;  // Set the height to the scroll height
-                        window.scrollTo(scrollLeft, scrollTop);  // Restore the scroll position
-                    }
-
-                    function updateLabel() {
-                        if (textarea.value !== "" || textarea === document.activeElement) {
-                            contentLabel.classList.add("active");
-                        } else {
-                            contentLabel.classList.remove("active");
-                        }
-                    }
-
-                    // Adjust the height when the page loads
-                    window.addEventListener('load', () => {
-                        adjustTextareaHeight(textarea);
-                        updateLabel();
-                    });
-
-                    // Adjust the height whenever the user types
-                    textarea.addEventListener("input", () => {
-                        adjustTextareaHeight(textarea);
-                        updateLabel();
-                    });
-
-                    // Handle the label state
-                    textarea.addEventListener("focus", updateLabel);
-                    textarea.addEventListener("blur", updateLabel);
-                });
-            </script>
             <div class="form-row">
                 <button type="submit" class="submit-btn">Erstellen</button>
+                <a href="{% url 'inventory' %}" class="button">Abbrechen</a>
             </div>
         </form>
+        <script>
+            const textarea = document.querySelector("textarea");
+
+            function adjustTextareaHeight(element) {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+                element.style.height = "63px";
+                let scHeight = element.scrollHeight;
+                element.style.height = `${scHeight}px`;
+
+                window.scrollTo(scrollLeft, scrollTop);
+            }
+
+            window.addEventListener('load', () => {
+                adjustTextareaHeight(textarea);
+            });
+
+            textarea.addEventListener("input", () => {
+                adjustTextareaHeight(textarea);
+            });
+        </script>
+        <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const selectButtons = document.querySelectorAll(".select-btn");
+
+                selectButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        const optionsMenu = this.nextElementSibling;
+                        optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
+                        selectButtons.forEach(otherButton => {
+                            if (otherButton !== button) {
+                                otherButton.nextElementSibling.style.display = 'none';
+                            }
+                        });
+                    });
+
+                    const options = button.nextElementSibling.querySelectorAll("li");
+                    options.forEach(option => {
+                        option.addEventListener("click", function() {
+                            const selectedText = this.querySelector(".option-text").textContent;
+                            const selectedRadio = this.querySelector("input[type='radio']");
+                            selectedRadio.checked = true;
+                            button.querySelector(".sBtn-text").textContent = selectedText;
+                            button.nextElementSibling.style.display = 'none';
+                        });
+                    });
+                });
+
+                document.addEventListener("click", function(e) {
+                    if (!e.target.matches('.select-btn, .select-btn *, .options, .options *')) {
+                        document.querySelectorAll(".options").forEach(optionsMenu => {
+                            optionsMenu.style.display = 'none';
+                        });
+                    }
+                });
+
+                const addButton = document.getElementById('add-button');
+                const removeButton = document.getElementById('remove-button');
+
+                addButton.addEventListener('click', function() {
+                    moveSelectedTags('available-tags', 'selected-tags');
+                });
+
+                removeButton.addEventListener('click', function() {
+                    moveSelectedTags('selected-tags', 'available-tags');
+                });
+
+                function moveSelectedTags(fromId, toId) {
+                    const fromList = document.getElementById(fromId).querySelector('ul');
+                    const toList = document.getElementById(toId).querySelector('ul');
+                    const selectedTags = fromList.querySelectorAll('li input:checked');
+
+                    selectedTags.forEach(tag => {
+                        const listItem = tag.closest('li');
+                        listItem.querySelector('input').checked = false;
+                        toList.appendChild(listItem);
+                    });
+                }
+
+                document.querySelectorAll('.tag-list input[type="checkbox"]').forEach(tag => {
+                    tag.addEventListener('click', function() {
+                        this.closest('li').classList.toggle('selected', this.checked);
+                    });
+                });
+
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.querySelectorAll('#selected-tags input[type="checkbox"]').forEach(input => {
+                        input.checked = true;
+                        input.name = "selected_tags";
+                    });
+                });
+            });
+        </script>
     </div>
-    <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
 </body>
 </html>
+

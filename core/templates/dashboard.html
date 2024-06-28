@@ -127,7 +127,11 @@
                     <div class="data playbook">
                         <span class="data-title">Playbook</span>
                         {% for item in jobs %}
-                            <span class="data-list">{{ item.job.playbook.name }}</span>
+                            {% if item.job.name|length > 15 %}
+                                <span class="data-list">{{ item.job.name|slice:":15" }}...</span>
+                                {% else %}
+                                    <span class="data-list">{{ item.job.name }}</span>
+                                {% endif %}
                         {% endfor %}
                     </div>
                     <div class="data inventory">

@@ -89,6 +89,18 @@
                     <i class="uil uil-clock-three"></i>
                     <span class="text">Playbook</span>
                 </div>
+                <form method="GET" action="{% url 'playbook' %}">
+                    <div class="tag-filter">
+                        <label for="tag-select">Filter by Tag:</label>
+                        <select id="tag-select" name="tag">
+                            <option value="all">All</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Filter</button>
+                    </div>
+                </form>
                 <div class="activity-data">
                     {% if playbook %}
                     <div class="data names">
@@ -100,13 +112,31 @@
                     <div class="data joined">
                         <span class="data-title">Beschreibung</span>
                         {% for item in playbook %}
-                            <span class="data-list">{{ item.description }}</span>
+                            {% if item.description|length > 40 %}
+                                <span class="data-list">{{ item.description|slice:":40" }}...</span>
+                                {% else %}
+                                    <span class="data-list">{{ item.description }}</span>
+                                {% endif %}
                         {% endfor %}
                     </div>
                     <div class="data type">
                         <span class="data-title">Fachgruppe</span>
                         {% for item in playbook %}
                             <span class="data-list">{{ item.group }}</span>
+                        {% endfor %}
+                    </div>
+                        <div class="data new-column">
+                        <span class="data-title">Tags</span>
+                        {% for item in playbook %}
+                            {% if item.tags.all %}
+                            <div class="tags-container" id="tags-container-{{ item.id }}">
+                                {% for tag in item.tags.all %}
+                                    <span class="tag">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                <span class="data-list">Keine Tags</span>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="data status">

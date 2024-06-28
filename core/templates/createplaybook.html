@@ -34,48 +34,84 @@
       <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
       <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
    </head>
-   <body>
-      <div class="container">
-         <div class="text">Playbook erstellen</div>
-         <form method="post">
+<body>
+    <div class="container">
+        <div class="text">Playbook erstellen</div>
+        <form method="post">
             {% csrf_token %}
             <div class="form-row">
-               <div class="input-data focus-line half-length" style="flex:1; min-width: 250px; margin-right: 20px;">
-                   {{ form.inventory_name }}
-                  <label for="{{ form.inventory_name.id_for_label }}">{{ form.inventory_name.label }}</label>
-               </div>
-               <div class="select-menu" style="flex:1; min-width: 250px;">
-                  <div class="select-btn">
-                     <span class="sBtn-text">Gruppe auswählen</span>
-                     <i class="bx bx-chevron-down"></i>
-                  </div>
-                  <ul class="options">
-                      {% for value, label in form.group.field.choices %}
-                          <li class="option">
-                              <label>
-                                  <input type="radio" name="group" value="{{ value }}" {% if form.group.value == value %}checked{% endif %}>
-                                  <span class="option-text">{{ label }}</span>
-                              </label>
-                          </li>
-                      {% endfor %}
-                  </ul>
-               </div>
+                <div class="input-data focus-line half-length" style="flex:1; min-width: 250px; margin-right: 20px;">
+                    {{ form.inventory_name }}
+                    <label for="{{ form.inventory_name.id_for_label }}">{{ form.inventory_name.label }}</label>
+                </div>
+                <div class="select-menu" style="flex:1; min-width: 250px;">
+                    <div class="select-btn">
+                        <span class="sBtn-text">Gruppe auswählen</span>
+                        <i class="bx bx-chevron-down"></i>
+                    </div>
+                    <ul class="options">
+                        {% for value, label in form.group.field.choices %}
+                            <li class="option">
+                                <label>
+                                    <input type="radio" name="group" value="{{ value }}" {% if form.group.value == value %}checked{% endif %}>
+                                    <span class="option-text">{{ label }}</span>
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <div class="form-row">
-               <div style="width:100%" class="input-data focus-line half-length">
-                   {{ form.description }}
-                  <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
-               </div>
+                <div style="width:100%" class="input-data focus-line half-length">
+                    {{ form.description }}
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                </div>
+            </div>
+            <!-- Tag Selection -->
+            <div class="form-row">
+                <div class="tag-container">
+                    <div class="tag-list" id="available-tags">
+                        <h3>Verfügbare tags</h3>
+                        <ul>
+                            {% for value, label in form.available_tags.field.choices %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="available_tags" value="{{ value }}">
+                                        <span class="option-text">{{ label }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" id="add-button">→</button>
+                        <button type="button" id="remove-button">←</button>
+                    </div>
+                    <div class="tag-list" id="selected-tags">
+                        <h3>Ausgewählte tags</h3>
+                        <ul>
+                            {% for value, label in form.selected_tags.field.choices %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="selected_tags" value="{{ value }}" checked>
+                                        <span class="option-text">{{ label }}</span>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="wrapper">
-               <span>Content</span>
+                <span>Content</span>
                 {{ form.content }}
             </div>
             <div class="form-row">
-               <button type="submit" class="submit-btn">Erstellen</button>
+                <button type="submit" class="submit-btn">Erstellen</button>
+                <a href="{% url 'inventory' %}" class="button">Abbrechen</a>
             </div>
-         </form>
-         <script>
+        </form>
+        <script>
             const textarea = document.querySelector("textarea");
 
             function adjustTextareaHeight(element) {
@@ -96,28 +132,101 @@
             textarea.addEventListener("input", () => {
                 adjustTextareaHeight(textarea);
             });
-         </script>
-      </div>
-      <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
-      <script>
-         document.addEventListener("DOMContentLoaded", function() {
-           const textarea = document.querySelector(".wrapper textarea");
-           const contentLabel = document.querySelector(".wrapper span");
+        </script>
+        <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const textarea = document.querySelector(".wrapper textarea");
+                const contentLabel = document.querySelector(".wrapper span");
 
-           function updateLabel() {
-             if(textarea.value !== "" || textarea === document.activeElement) {
-               contentLabel.classList.add("active");
-             } else {
-               contentLabel.classList.remove("active");
-             }
-           }
+                function updateLabel() {
+                    if(textarea.value !== "" || textarea === document.activeElement) {
+                        contentLabel.classList.add("active");
+                    } else {
+                        contentLabel.classList.remove("active");
+                    }
+                }
 
-           textarea.addEventListener("keyup", updateLabel);
-           textarea.addEventListener("focus", updateLabel);
-           textarea.addEventListener("blur", updateLabel);
+                textarea.addEventListener("keyup", updateLabel);
+                textarea.addEventListener("focus", updateLabel);
+                textarea.addEventListener("blur", updateLabel);
 
-           updateLabel();
-         });
-      </script>
-   </body>
+                updateLabel();
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const selectButtons = document.querySelectorAll(".select-btn");
+
+                selectButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        const optionsMenu = this.nextElementSibling;
+                        optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
+                        selectButtons.forEach(otherButton => {
+                            if (otherButton !== button) {
+                                otherButton.nextElementSibling.style.display = 'none';
+                            }
+                        });
+                    });
+
+                    const options = button.nextElementSibling.querySelectorAll("li");
+                    options.forEach(option => {
+                        option.addEventListener("click", function() {
+                            const selectedText = this.querySelector(".option-text").textContent;
+                            const selectedRadio = this.querySelector("input[type='radio']");
+                            selectedRadio.checked = true;
+                            button.querySelector(".sBtn-text").textContent = selectedText;
+                            button.nextElementSibling.style.display = 'none';
+                        });
+                    });
+                });
+
+                document.addEventListener("click", function(e) {
+                    if (!e.target.matches('.select-btn, .select-btn *, .options, .options *')) {
+                        document.querySelectorAll(".options").forEach(optionsMenu => {
+                            optionsMenu.style.display = 'none';
+                        });
+                    }
+                });
+
+                const addButton = document.getElementById('add-button');
+                const removeButton = document.getElementById('remove-button');
+
+                addButton.addEventListener('click', function() {
+                    moveSelectedTags('available-tags', 'selected-tags');
+                });
+
+                removeButton.addEventListener('click', function() {
+                    moveSelectedTags('selected-tags', 'available-tags');
+                });
+
+                function moveSelectedTags(fromId, toId) {
+                    const fromList = document.getElementById(fromId).querySelector('ul');
+                    const toList = document.getElementById(toId).querySelector('ul');
+                    const selectedTags = fromList.querySelectorAll('li input:checked');
+
+                    selectedTags.forEach(tag => {
+                        const listItem = tag.closest('li');
+                        listItem.querySelector('input').checked = false;
+                        toList.appendChild(listItem);
+                    });
+                }
+
+                document.querySelectorAll('.tag-list input[type="checkbox"]').forEach(tag => {
+                    tag.addEventListener('click', function() {
+                        this.closest('li').classList.toggle('selected', this.checked);
+                    });
+                });
+
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.querySelectorAll('#selected-tags input[type="checkbox"]').forEach(input => {
+                        input.checked = true;
+                        input.name = "selected_tags";
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
 </html>
+

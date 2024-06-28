@@ -377,8 +377,7 @@ nav.close ~ .dashboard .top {
     margin-top: 10px;
 }
 
-/* Estilo para telas com largura menor que 1000px */
-@media (max-width: 1000px) {
+@media (max-width: 1300px) {
     .activity-data .data.status .btn {
         margin-top: 11.5px;
     }

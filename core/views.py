@@ -113,12 +113,22 @@ def inventory(request):
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names:
-        inventory = Inventory.objects.all()
-    else:
-        inventory = Inventory.objects.filter(group__in=core_groups)
+    tags = Tag.objects.all()
 
-    return render(request, "inventory.html", {"inventory": inventory})
+    selected_tag = request.GET.get('tag')
+
+    if "Fachgruppe Leitung" in user_group_names:
+        if selected_tag and selected_tag != 'all':
+            inventory = Inventory.objects.filter(tags__name=selected_tag)
+        else:
+            inventory = Inventory.objects.all()
+    else:
+        if selected_tag and selected_tag != 'all':
+            inventory = Inventory.objects.filter(group__in=core_groups, tags__name=selected_tag)
+        else:
+            inventory = Inventory.objects.filter(group__in=core_groups)
+
+    return render(request, "inventory.html", {"inventory": inventory, "tags": tags})
 
 
 @login_required
@@ -129,25 +139,38 @@ def playbook(request):
 
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
+    tags = Tag.objects.all()
+
+    selected_tag = request.GET.get('tag')
 
     if "Fachgruppe Leitung" in user_group_names:
-        playbook = Playbook.objects.all()
+        if selected_tag and selected_tag != 'all':
+            playbook = Playbook.objects.filter(tags__name=selected_tag)
+        else:
+            playbook = Playbook.objects.all()
     else:
-        playbook = Playbook.objects.filter(group__in=core_groups)
+        if selected_tag and selected_tag != 'all':
+            playbook = Playbook.objects.filter(group__in=core_groups, tags__name=selected_tag)
+        else:
+            playbook = Playbook.objects.filter(group__in=core_groups)
 
-    return render(request, "playbook.html", {"playbook": playbook})
+    return render(request, "playbook.html", {"playbook": playbook, "tags": tags})
 
 
 @login_required
 def create_inventory(request):
+    available_tags = Tag.objects.all()
+    tag_choices = [(tag.id, tag.name) for tag in available_tags]
+
     if request.method == 'POST':
-        form = InventoryForm(request.POST)
+        form = InventoryForm(request.POST, tag_choices=tag_choices)
         if form.is_valid():
             inventory_name = form.cleaned_data['inventory_name']
             group = form.cleaned_data['group']
             group_model = get_object_or_404(Group, name=group)
             description = form.cleaned_data['description']
             content = form.cleaned_data['content']
+            selected_tags = form.cleaned_data['selected_tags']
 
             new_inventory = Inventory()
             new_inventory.name = inventory_name
@@ -156,40 +179,62 @@ def create_inventory(request):
             new_inventory.content = content
             new_inventory.save()
 
+            # Add the selected tags to the new inventory
+            new_inventory.tags.set(selected_tags)
+            new_inventory.save()
+
             return redirect('inventory')
         else:
+            # If the form is invalid, we need to manually set the choices again
+            form.fields['available_tags'].choices = tag_choices
+            form.fields['selected_tags'].choices = [(tag.id, tag.name) for tag in Tag.objects.filter(id__in=form.cleaned_data.get('selected_tags', []))]
             print("Formulário inválido", form.errors)
     else:
-        form = InventoryForm()
+        form = InventoryForm(tag_choices=tag_choices)
+        form.fields['selected_tags'].choices = []  # Ensure selected tags are initially empty
 
     return render(request, "createinventory.html", {'form': form})
 
 
+
 @login_required
 def create_playbook(request):
+    available_tags = Tag.objects.all()
+    tag_choices = [(tag.id, tag.name) for tag in available_tags]
+
     if request.method == 'POST':
-        form = PlaybookForm(request.POST)
+        form = PlaybookForm(request.POST, tag_choices=tag_choices)
         if form.is_valid():
             playbook_name = form.cleaned_data['inventory_name']
             group = form.cleaned_data['group']
             group_model = get_object_or_404(Group, name=group)
             description = form.cleaned_data['description']
             content = form.cleaned_data['content']
+            selected_tags = form.cleaned_data['selected_tags']
 
-            new_inventory = Playbook()
-            new_inventory.name = playbook_name
-            new_inventory.group = group_model
-            new_inventory.description = description
-            new_inventory.content = content
-            new_inventory.save()
+            new_playbook = Playbook()
+            new_playbook.name = playbook_name
+            new_playbook.group = group_model
+            new_playbook.description = description
+            new_playbook.content = content
+            new_playbook.save()
 
-            return redirect('playbook')  # Certifique-se que 'dashboard' é uma URL nomeada correta
+            # Add the selected tags to the new playbook
+            new_playbook.tags.set(selected_tags)
+            new_playbook.save()
+
+            return redirect('playbook')
         else:
-            print("Formulário inválido", form.errors)  # Mostra os erros de validação
+            # If the form is invalid, we need to manually set the choices again
+            form.fields['available_tags'].choices = tag_choices
+            form.fields['selected_tags'].choices = [(tag.id, tag.name) for tag in Tag.objects.filter(id__in=form.cleaned_data.get('selected_tags', []))]
+            print("Formulário inválido", form.errors)
     else:
-        form = PlaybookForm()
+        form = PlaybookForm(tag_choices=tag_choices)
+        form.fields['selected_tags'].choices = []  # Ensure selected tags are initially empty
 
     return render(request, "createplaybook.html", {'form': form})
+
 
 @login_required
 def create_job(request):
@@ -200,21 +245,25 @@ def create_job(request):
     if "Fachgruppe Leitung" in user_group_names:
         playbook = Playbook.objects.all()
         inventory = Inventory.objects.all()
+        available_tags = Tag.objects.all()
     else:
         playbook = Playbook.objects.filter(group__in=core_groups)
         inventory = Inventory.objects.filter(group__in=core_groups)
+        available_tags = Tag.objects.filter(group__in=core_groups)
 
     playbook_choices = [(pb.id, pb.name) for pb in playbook]
     inventory_choices = [(iv.id, iv.name) for iv in inventory]
+    tag_choices = [(tag.id, tag.name) for tag in available_tags]
 
     if request.method == 'POST':
-        form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices)
+        form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices)
         if form.is_valid():
             name = form.cleaned_data['name']
             inventory = get_object_or_404(Inventory, id=form.cleaned_data['inventory'])
             playbook = get_object_or_404(Playbook, id=form.cleaned_data['playbook'])
             group = get_object_or_404(Group, name=form.cleaned_data['group'])
             description = form.cleaned_data['description']
+            selected_tags = form.cleaned_data['selected_tags']
 
             new_job = Job()
             new_job.name = name
@@ -224,61 +273,65 @@ def create_job(request):
             new_job.description = description
             new_job.save()
 
+            # Add the selected tags to the new job
+            new_job.tags.set(selected_tags)
+            new_job.save()
+
             return redirect('jobs')
         else:
+            # If the form is invalid, we need to manually set the choices again
+            form.fields['available_tags'].choices = tag_choices
+            form.fields['selected_tags'].choices = [(tag.id, tag.name) for tag in Tag.objects.filter(id__in=form.cleaned_data.get('selected_tags', []))]
             print("Formulário inválido", form.errors)
     else:
-        form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices)
+        form = JobForm(playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices)
+        form.fields['selected_tags'].choices = []  # Ensure selected tags are initially empty
 
     return render(request, "createjob.html", {'form': form})
+
 
 @login_required
 def item_inventory_details(request, id):
     inventory = get_object_or_404(Inventory, pk=id)
+    available_tags = Tag.objects.all()
+    tag_choices = [(tag.id, tag.name) for tag in available_tags]
+    selected_tag_ids = list(inventory.tags.values_list('id', flat=True))
 
     if request.method == 'POST':
         action = request.POST.get('action')
-
-        if action == 'edit':
-            form = InventoryForm(request.POST)
-            if form.is_valid():
+        submitted_tag_ids = request.POST.getlist('selected_tags')
+        all_selected_ids = list(set(selected_tag_ids + [int(tag_id) for tag_id in submitted_tag_ids]))
+        form = InventoryDetailsForm(request.POST, tag_choices=tag_choices, selected_tag_ids=all_selected_ids)
+        if form.is_valid():
+            if action == 'edit':
                 inventory.name = form.cleaned_data['inventory_name']
                 inventory.group = get_object_or_404(Group, name=form.cleaned_data['group'])
                 inventory.description = form.cleaned_data['description']
                 inventory.content = form.cleaned_data['content']
+                selected_tags = form.cleaned_data['selected_tags']
                 inventory.save()
+                inventory.tags.set(Tag.objects.filter(id__in=selected_tags))
                 return redirect('inventory')
-            else:
-                print("Formulário inválido", form.errors)
-
-        elif action == 'delete':
-            inventory.delete()
-            return redirect('inventory')
-
-        elif action == 'cancel':
-            return redirect('inventory')
-
-        # Retorna ao formulário se não houver ação reconhecida ou o formulário não for válido
-        initial_data = {
-            'inventory_name': inventory.name,
-            'group': inventory.group.name if inventory.group else None,
-            'description': inventory.description,
-            'content': inventory.content
-        }
-        form = InventoryForm(initial=initial_data)
-        return render(request, 'details.html', {'form': form, 'inventory': inventory})
-
+            elif action == 'delete':
+                inventory.delete()
+                return redirect('inventory')
+            elif action == 'cancel':
+                return redirect('inventory')
+        else:
+            print("Formulário inválido", form.errors)
+            print("Submitted data:", request.POST)
+            print("Tag choices:", tag_choices)
+            print("Selected tag ids:", selected_tag_ids)
     else:
-        # Preparar o formulário para GET request
         initial_data = {
             'inventory_name': inventory.name,
             'group': inventory.group.name if inventory.group else None,
             'description': inventory.description,
             'content': inventory.content
         }
-        form = InventoryForm(initial=initial_data)
-        return render(request, 'details.html', {'form': form, 'inventory': inventory})
+        form = InventoryDetailsForm(initial=initial_data, tag_choices=tag_choices, selected_tag_ids=selected_tag_ids)
 
+    return render(request, 'details.html', {'form': form, 'inventory': inventory})
 
 @login_required
 def item_job_details(request, id):
@@ -299,18 +352,24 @@ def item_job_details(request, id):
     playbook_choices = [(pb.id, pb.name) for pb in playbook]
     inventory_choices = [(iv.id, iv.name) for iv in inventory]
 
+    available_tags = Tag.objects.all()
+    tag_choices = [(tag.id, tag.name) for tag in available_tags]
+    selected_tag_ids = list(job.tags.values_list('id', flat=True))
+
     if request.method == 'POST':
         action = request.POST.get('action')
-
-        if action == 'edit':
-            form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices)
-            if form.is_valid():
+        submitted_tag_ids = request.POST.getlist('selected_tags')
+        all_selected_ids = list(set(selected_tag_ids + [int(tag_id) for tag_id in submitted_tag_ids]))
+        form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices, selected_tag_ids=all_selected_ids)
+        if form.is_valid():
+            if action == 'edit':
                 job.name = form.cleaned_data['name']
                 job.group = get_object_or_404(Group, name=form.cleaned_data['group'])
                 job.playbook = get_object_or_404(Playbook, id=form.cleaned_data['playbook'])
                 job.inventory = get_object_or_404(Inventory, id=form.cleaned_data['inventory'])
                 job.description = form.cleaned_data['description']
                 job.save()
+                job.tags.set(Tag.objects.filter(id__in=form.cleaned_data['selected_tags']))
                 return redirect('jobs')
             else:
                 error_message = form.errors
@@ -330,11 +389,8 @@ def item_job_details(request, id):
             'inventory': job.inventory.id if job.inventory else None,
             'description': job.description
         }
-        form = JobForm(initial=initial_data, playbook=playbook_choices, inventory=inventory_choices)
-        return render(request, 'jobdetails.html', {'form': form, 'inventory': inventory, "error_message": error_message})
-
+        form = JobForm(initial=initial_data, playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices, selected_tag_ids=selected_tag_ids)
     else:
-        # Preparar o formulário para GET request
         initial_data = {
             'name': job.name,
             'group': job.group.name if job.group else None,
@@ -342,73 +398,80 @@ def item_job_details(request, id):
             'inventory': job.inventory.id if job.inventory else None,
             'description': job.description
         }
-        form = JobForm(initial=initial_data, playbook=playbook_choices, inventory=inventory_choices)
-        return render(request, 'jobdetails.html', {'form': form, 'inventory': inventory, "error_message": error_message})
+        form = JobForm(initial=initial_data, playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices, selected_tag_ids=selected_tag_ids)
+
+    return render(request, 'jobdetails.html', {'form': form, 'job': job, 'error_message': error_message})
+
 
 
 @login_required
 def item_playbook_details(request, id):
     playbook = get_object_or_404(Playbook, pk=id)
+    available_tags = Tag.objects.all()
+    tag_choices = [(tag.id, tag.name) for tag in available_tags]
+    selected_tag_ids = list(playbook.tags.values_list('id', flat=True))
 
     if request.method == 'POST':
         action = request.POST.get('action')
-
-        if action == 'edit':
-            form = InventoryForm(request.POST)
-            if form.is_valid():
-                playbook.name = form.cleaned_data['inventory_name']
+        submitted_tag_ids = request.POST.getlist('selected_tags')
+        all_selected_ids = list(set(selected_tag_ids + [int(tag_id) for tag_id in submitted_tag_ids]))
+        form = PlaybookDetailsForm(request.POST, tag_choices=tag_choices, selected_tag_ids=all_selected_ids)
+        if form.is_valid():
+            if action == 'edit':
+                playbook.name = form.cleaned_data['playbook_name']
                 playbook.group = get_object_or_404(Group, name=form.cleaned_data['group'])
                 playbook.description = form.cleaned_data['description']
                 playbook.content = form.cleaned_data['content']
                 playbook.save()
+                playbook.tags.set(Tag.objects.filter(id__in=form.cleaned_data['selected_tags']))
                 return redirect('playbook')
-            else:
-                print("Formulário inválido", form.errors)
-
-        elif action == 'delete':
-            playbook.delete()
-            return redirect('playbook')
-
-        elif action == 'cancel':
-            return redirect('playbook')
-
-        # Retorna ao formulário se não houver ação reconhecida ou o formulário não for válido
-        initial_data = {
-            'inventory_name': playbook.name,
-            'group': playbook.group.name if playbook.group else None,
-            'description': playbook.description,
-            'content': playbook.content
-        }
-        form = InventoryForm(initial=initial_data)
-        return render(request, 'detailsplaybook.html', {'form': form, 'playbook': playbook})
-
+            elif action == 'delete':
+                playbook.delete()
+                return redirect('playbook')
+            elif action == 'cancel':
+                return redirect('playbook')
+        else:
+            print("Formulário inválido", form.errors)
+            print("Submitted data:", request.POST)
+            print("Tag choices:", tag_choices)
+            print("Selected tag ids:", selected_tag_ids)
     else:
-        # Preparar o formulário para GET request
         initial_data = {
-            'inventory_name': playbook.name,
+            'playbook_name': playbook.name,
             'group': playbook.group.name if playbook.group else None,
             'description': playbook.description,
             'content': playbook.content
         }
-        form = InventoryForm(initial=initial_data)
-        return render(request, 'detailsplaybook.html', {'form': form, 'playbook': playbook})
+        form = PlaybookDetailsForm(initial=initial_data, tag_choices=tag_choices, selected_tag_ids=selected_tag_ids)
+
+    return render(request, 'detailsplaybook.html', {'form': form, 'playbook': playbook})
+
 
 
 @login_required
 def jobs(request):
     # Obtendo os nomes dos grupos do usuário
     user_group_names = request.user.groups.all().values_list('name', flat=True)
-    user_group_names = list(user_group_names)  # Convertendo para lista
+    user_group_names = list(user_group_names)
 
     # Buscando os grupos correspondentes no modelo Core
     core_groups = Group.objects.filter(name__in=user_group_names)
+    tags = Tag.objects.all()
+
+    selected_tag = request.GET.get('tag')
 
     if "Fachgruppe Leitung" in user_group_names:
-        job = Job.objects.all()
+        if selected_tag and selected_tag != 'all':
+            job = Job.objects.filter(tags__name=selected_tag)
+        else:
+            job = Job.objects.all()
     else:
-        job = Job.objects.filter(group__in=core_groups)
+        if selected_tag and selected_tag != 'all':
+            job = Job.objects.filter(group__in=core_groups, tags__name=selected_tag)
+        else:
+            job = Job.objects.filter(group__in=core_groups)
 
-    return render(request, 'jobs.html', {"job": job})
+    return render(request, 'jobs.html', {"job": job, "tags": tags, "selected_tag": selected_tag})
 
 @login_required
 def create_new_job_run(request, id):

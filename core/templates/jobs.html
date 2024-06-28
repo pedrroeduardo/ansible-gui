@@ -1,6 +1,5 @@
 {% load static %}
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +12,7 @@
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-            <!-- Favicon para navegadores -->
+    <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
@@ -81,7 +80,6 @@
             <div class="btn-search">
                 <a href="{% url 'create-job' %}" class="buttonLink">Job erstellen</a>
             </div>
-            <!--<img src="images/profile.jpg" alt="">-->
         </div>
         <div class="dash-content">
             <div class="activity">
@@ -89,6 +87,18 @@
                     <i class="uil uil-clock-three"></i>
                     <span class="text">Jobs</span>
                 </div>
+                <form method="GET" action="{% url 'jobs' %}">
+                    <div class="tag-filter">
+                        <label for="tag-select">Filter by Tag:</label>
+                        <select id="tag-select" name="tag">
+                            <option value="all">All</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Filter</button>
+                    </div>
+                </form>
                 <div class="activity-data">
                     {% if job %}
                     <div class="data names">
@@ -97,13 +107,13 @@
                             <a href="{% url 'job_details' id=item.id %}" class="data-list">{{ item.name }}</a>
                         {% endfor %}
                     </div>
-                        <div class="data email">
+                    <div class="data email">
                         <span class="data-title">Playbook</span>
                         {% for item in job %}
                             <span class="data-list">{{ item.playbook }}</span>
                         {% endfor %}
                     </div>
-                        <div class="data type">
+                    <div class="data type">
                         <span class="data-title">Inventory</span>
                         {% for item in job %}
                             <span class="data-list">{{ item.inventory }}</span>
@@ -112,27 +122,45 @@
                     <div class="data joined">
                         <span class="data-title">Beschreibung</span>
                         {% for item in job %}
-                            <span class="data-list">{{ item.description }}</span>
+                            {% if item.description|length > 15 %}
+                                <span class="data-list">{{ item.description|slice:":10" }}...</span>
+                                {% else %}
+                                    <span class="data-list">{{ item.description }}</span>
+                                {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="data new-column">
+                        <span class="data-title">Tags</span>
+                        {% for item in job %}
+                            {% if item.tags.all %}
+                            <div class="tags-container" id="tags-container-{{ item.id }}">
+                                {% for tag in item.tags.all %}
+                                    <span class="tag">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                <span class="data-list">Keine Tags</span>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="data status">
                         <span class="data-title">Aktion</span>
-                    <div class="buttons-container">
-                        {% for item in job %}
-                            <button type="button" class="button" data-url="{% url 'job_details' id=item.id %}">
-                                <span class="button__text">Bearbeiten</span>
-                                <span class="button__icon">
-                                    <ion-icon name="create-outline"></ion-icon>
-                                </span>
-                            </button>
-                            <button type="button" class="button" data-url="{% url 'create-run-job' id=item.id %}">
-                                <span class="button__text">Run</span>
-                                <span class="button__icon">
-                                    <ion-icon name="create-outline"></ion-icon>
-                                </span>
-                            </button>
-                        {% endfor %}
-                    </div>
+                        <div class="buttons-container">
+                            {% for item in job %}
+                                <button type="button" class="button" data-url="{% url 'job_details' id=item.id %}">
+                                    <span class="button__text">Bearbeiten</span>
+                                    <span class="button__icon">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                    </span>
+                                </button>
+                                <button type="button" class="button" data-url="{% url 'create-run-job' id=item.id %}">
+                                    <span class="button__text">Run</span>
+                                    <span class="button__icon">
+                                        <ion-icon name="create-outline"></ion-icon>
+                                    </span>
+                                </button>
+                            {% endfor %}
+                        </div>
                     </div>
                 {% else %}
                     <div class="no-data">
@@ -144,16 +172,16 @@
         </div>
     </section>
     <script src="{% static 'js/../../static/admin/js/inventory.js' %}"></script>
-<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.button');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            window.location.href = this.getAttribute('data-url');
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    window.location.href = this.getAttribute('data-url');
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 </body>
 </html>
