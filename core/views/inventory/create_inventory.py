@@ -2,8 +2,12 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
 from core.forms.inventory.inventory_form import InventoryForm
 from django.contrib.auth.decorators import login_required
-from core.models import *
 from django.shortcuts import get_object_or_404
+
+from core.models.tag import Tag
+from core.models.group import Group
+from core.models.inventory import Inventory
+
 
 
 @login_required

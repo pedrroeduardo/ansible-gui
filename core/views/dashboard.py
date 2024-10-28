@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from core.models import *
+
+from core.models.group import Group
+from core.models.job_executed import JobExecuted
 
 
 @login_required
@@ -14,8 +16,8 @@ def dashboard(request):
     core_groups = Group.objects.filter(name__in=user_group_names)
 
     if "Fachgruppe Leitung" in user_group_names:
-        jobs_runned = JobRunned.objects.all()
+        jobs_runned = JobExecuted.objects.all()
     else:
-        jobs_runned = JobRunned.objects.filter(job__group__in=core_groups)
+        jobs_runned = JobExecuted.objects.filter(job__group__in=core_groups)
 
     return render(request, "dashboard.html", {"jobs": jobs_runned})

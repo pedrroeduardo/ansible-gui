@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import *
+from core.models.job import Job
+from core.models.playbook import Playbook
+from core.models.inventory import Inventory
+from core.models.tag import Tag
+from core.models.group import Group
+from core.models.status import Status
+from core.models.job_executed import JobExecuted
+
 
 
 @admin.register(Job)
@@ -28,5 +35,5 @@ class InventoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Group)
 admin.site.register(Status)
-admin.site.register(JobRunned)
+admin.site.register(JobExecuted)
 admin.site.register(Tag)

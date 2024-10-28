@@ -4,9 +4,10 @@ from django.shortcuts import render, redirect
 import django
 from core.forms.login_form import LoginForm
 from ldap3.core.exceptions import LDAPException
-from core.models import *
 
 import ldap3
+
+from core.models.group import Group
 
 
 def ldap_login(username):

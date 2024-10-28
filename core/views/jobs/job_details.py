@@ -2,8 +2,13 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
 from core.forms.jobs.job_form import JobForm
 from django.contrib.auth.decorators import login_required
-from core.models import *
 from django.shortcuts import get_object_or_404
+
+from core.models.tag import Tag
+from core.models.job import Job
+from core.models.inventory import Inventory
+from core.models.playbook import Playbook
+from core.models.group import Group
 
 
 @login_required

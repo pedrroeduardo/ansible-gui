@@ -55,10 +55,11 @@ class RunJobConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def update_job_status(self, job_run_id, output):
-        from .models import JobRunned, Status
+        from core.models.status import Status
+        from core.models.job_executed import JobExecuted
 
         try:
-            job_run = JobRunned.objects.get(id=job_run_id)
+            job_run = JobExecuted.objects.get(id=job_run_id)
             job_run.output = output
             job_run.has_run = True
             job_run.save()
@@ -105,8 +106,8 @@ class RunJobConsumer(AsyncWebsocketConsumer):
                 job_run.save()
 
             return job_run
-        except JobRunned.DoesNotExist:
-            logger.info("JobRunned does not Exist")
+        except JobExecuted.DoesNotExist:
+            logger.info("JobExecuted does not Exist")
             return None
         except Status.DoesNotExist:
             logger.info("Status does not Exist")
@@ -114,15 +115,15 @@ class RunJobConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def get_job_run(self, job_id):
-        from .models import JobRunned
-        job_run = get_object_or_404(JobRunned, id=job_id)
+        from core.models.job_executed import JobExecuted
+        job_run = get_object_or_404(JobExecuted, id=job_id)
         if job_run.has_run:
             raise Http404("Job already executed")
         return job_run
 
     @sync_to_async
     def get_job(self, job_id):
-        from .models import Job
+        from core.models.job import Job
         return get_object_or_404(Job, id=job_id)
 
     async def run_job(self, job_id):
