@@ -1,39 +1,38 @@
 {% load static %}
 <!DOCTYPE html>
-<!-- Created By CodingNepal -->
 <html lang="en" dir="ltr">
-   <head>
-      <meta charset="utf-8">
-      <title>Job erstellen</title>
-      <link rel="stylesheet" href="{% static 'css/../../static/admin/css/createinventory.css' %}">
-      <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="utf-8">
+    <title>Job erstellen</title>
+    <link rel="stylesheet" href="{% static 'css/../../static/admin/css/createinventory.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <!-- Favicon para navegadores -->
-      <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
-      <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
-      <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
-      <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-96x96.png' %}" sizes="96x96">
+    <!-- Favicon para navegadores -->
+    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
+    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-96x96.png' %}" sizes="96x96">
 
-      <!-- Favicon para dispositivos Apple -->
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-57x57.png' %}" sizes="57x57">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-60x60.png' %}" sizes="60x60">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-72x72.png' %}" sizes="72x72">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-76x76.png' %}" sizes="76x76">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-114x114.png' %}" sizes="114x114">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-120x120.png' %}" sizes="120x120">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-144x144.png' %}" sizes="144x144">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-152x152.png' %}" sizes="152x152">
-      <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-180x180.png' %}" sizes="180x180">
+    <!-- Favicon para dispositivos Apple -->
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-57x57.png' %}" sizes="57x57">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-60x60.png' %}" sizes="60x60">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-72x72.png' %}" sizes="72x72">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-76x76.png' %}" sizes="76x76">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-114x114.png' %}" sizes="114x114">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-120x120.png' %}" sizes="120x120">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-144x144.png' %}" sizes="144x144">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-152x152.png' %}" sizes="152x152">
+    <link rel="apple-touch-icon" href="{% static 'css/../../static/admin/icons/apple-touch-icon-180x180.png' %}" sizes="180x180">
 
-      <!-- Favicon para Android -->
-      <link rel="icon" href="{% static 'css/../../static/admin/icons/android-icon-192x192.png' %}" sizes="192x192" type="image/png">
+    <!-- Favicon para Android -->
+    <link rel="icon" href="{% static 'css/../../static/admin/icons/android-icon-192x192.png' %}" sizes="192x192" type="image/png">
 
-      <!-- Favicon para Windows -->
-      <meta name="msapplication-square70x70logo" content="{% static 'css/../../static/admin/icons/mstile-70x70.png' %}">
-      <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
-      <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
-   </head>
+    <!-- Favicon para Windows -->
+    <meta name="msapplication-square70x70logo" content="{% static 'css/../../static/admin/icons/mstile-70x70.png' %}">
+    <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
+    <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
+</head>
 <body>
     <div class="container">
         <div class="text">Job erstellen</div>
@@ -136,84 +135,82 @@
             </div>
             <div class="form-row">
                 <button type="submit" class="submit-btn">Erstellen</button>
-                <a href="{% url 'inventory' %}" class="button">Abbrechen</a>
+                <a href="{% url 'jobs' %}" class="button">Abbrechen</a>
             </div>
         </form>
     </div>
     <script src="{% static 'js/../../static/admin/js/createinventory.js' %}"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const selectButtons = document.querySelectorAll(".select-btn");
+            document.addEventListener("DOMContentLoaded", function() {
+                const selectButtons = document.querySelectorAll(".select-btn");
 
-      selectButtons.forEach(button => {
-        button.addEventListener("click", function() {
-          const optionsMenu = this.nextElementSibling;
-          optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
-          selectButtons.forEach(otherButton => {
-            if (otherButton !== button) {
-              otherButton.nextElementSibling.style.display = 'none';
-            }
-          });
-        });
+                selectButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        const optionsMenu = this.nextElementSibling;
+                        optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
+                        selectButtons.forEach(otherButton => {
+                            if (otherButton !== button) {
+                                otherButton.nextElementSibling.style.display = 'none';
+                            }
+                        });
+                    });
 
-        const options = button.nextElementSibling.querySelectorAll("li");
-        options.forEach(option => {
-          option.addEventListener("click", function() {
-            const selectedText = this.querySelector(".option-text").textContent;
-            const selectedRadio = this.querySelector("input[type='radio']");
-            selectedRadio.checked = true;  // Mark the radio input as checked
-            button.querySelector(".sBtn-text").textContent = selectedText;
-            button.nextElementSibling.style.display = 'none'; // Close the menu after selection
-          });
-        });
-      });
+                    const options = button.nextElementSibling.querySelectorAll("li");
+                    options.forEach(option => {
+                        option.addEventListener("click", function() {
+                            const selectedText = this.querySelector(".option-text").textContent;
+                            const selectedRadio = this.querySelector("input[type='radio']");
+                            selectedRadio.checked = true;
+                            button.querySelector(".sBtn-text").textContent = selectedText;
+                            button.nextElementSibling.style.display = 'none';
+                        });
+                    });
+                });
 
-      document.addEventListener("click", function(e) {
-        if (!e.target.matches('.select-btn, .select-btn *, .options, .options *')) {
-          document.querySelectorAll(".options").forEach(optionsMenu => {
-            optionsMenu.style.display = 'none';
-          });
-        }
-      });
+                document.addEventListener("click", function(e) {
+                    if (!e.target.matches('.select-btn, .select-btn *, .options, .options *')) {
+                        document.querySelectorAll(".options").forEach(optionsMenu => {
+                            optionsMenu.style.display = 'none';
+                        });
+                    }
+                });
 
-      const addButton = document.getElementById('add-button');
-      const removeButton = document.getElementById('remove-button');
+                const addButton = document.getElementById('add-button');
+                const removeButton = document.getElementById('remove-button');
 
-      addButton.addEventListener('click', function() {
-          moveSelectedTags('available-tags', 'selected-tags');
-      });
+                addButton.addEventListener('click', function() {
+                    moveSelectedTags('available-tags', 'selected-tags');
+                });
 
-      removeButton.addEventListener('click', function() {
-          moveSelectedTags('selected-tags', 'available-tags');
-      });
+                removeButton.addEventListener('click', function() {
+                    moveSelectedTags('selected-tags', 'available-tags');
+                });
 
-      function moveSelectedTags(fromId, toId) {
-          const fromList = document.getElementById(fromId).querySelector('ul');
-          const toList = document.getElementById(toId).querySelector('ul');
-          const selectedTags = fromList.querySelectorAll('li input:checked');
+                function moveSelectedTags(fromId, toId) {
+                    const fromList = document.getElementById(fromId).querySelector('ul');
+                    const toList = document.getElementById(toId).querySelector('ul');
+                    const selectedTags = fromList.querySelectorAll('li input:checked');
 
-          selectedTags.forEach(tag => {
-              const listItem = tag.closest('li');
-              listItem.querySelector('input').checked = false;
-              toList.appendChild(listItem);
-          });
-      }
+                    selectedTags.forEach(tag => {
+                        const listItem = tag.closest('li');
+                        listItem.querySelector('input').checked = false;
+                        toList.appendChild(listItem);
+                    });
+                }
 
-      document.querySelectorAll('.tag-list input[type="checkbox"]').forEach(tag => {
-          tag.addEventListener('click', function() {
-              this.closest('li').classList.toggle('selected', this.checked);
-          });
-      });
+                document.querySelectorAll('.tag-list input[type="checkbox"]').forEach(tag => {
+                    tag.addEventListener('click', function() {
+                        this.closest('li').classList.toggle('selected', this.checked);
+                    });
+                });
 
-      document.querySelector('form').addEventListener('submit', function() {
-          document.querySelectorAll('#selected-tags input[type="checkbox"]').forEach(input => {
-              input.checked = true;
-              input.name = "selected_tags"; // Ensure the correct name for submission
-          });
-      });
-    });
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.querySelectorAll('#selected-tags input[type="checkbox"]').forEach(input => {
+                        input.checked = true;
+                        input.name = "selected_tags";
+                    });
+                });
+            });
     </script>
 </body>
 </html>
-
-

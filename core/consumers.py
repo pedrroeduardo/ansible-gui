@@ -5,7 +5,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import paramiko
 from asgiref.sync import sync_to_async
 import logging
-import time
 
 logger = logging.getLogger(__name__)
 
