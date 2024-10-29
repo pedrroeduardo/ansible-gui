@@ -76,89 +76,85 @@
         </div>
     </nav>
     <section class="dashboard">
-        <div class="top">
-            <i class="uil uil-bars sidebar-toggle"></i>
-            <div class="btn-search">
-                <a href="{% url 'create-inventory' %}" class="buttonLink">Inventory erstellen</a>
-            </div>
-            <!--<img src="images/profile.jpg" alt="">-->
+    <div class="top">
+        <i class="uil uil-bars sidebar-toggle"></i>
+        <div class="btn-search">
+            <a href="{% url 'create-inventory' %}" class="buttonLink">Inventory erstellen</a>
         </div>
-        <div class="dash-content">
-            <div class="activity">
-                <div class="title">
-                    <i class="uil uil-clock-three"></i>
-                    <span class="text">Inventory</span>
+    </div>
+    <div class="dash-content">
+        <div class="activity">
+            <div class="title">
+                <i class="uil uil-clock-three"></i>
+                <span class="text">Inventory</span>
+            </div>
+            <form method="GET" action="{% url 'inventory' %}">
+                <div class="tag-filter">
+                    <label for="tag-select">Filter by Tag:</label>
+                    <select id="tag-select" name="tag">
+                        <option value="all">All</option>
+                        {% for tag in tags %}
+                            <option value="{{ tag.name }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Filter</button>
                 </div>
-                <form method="GET" action="{% url 'inventory' %}">
-                    <div class="tag-filter">
-                        <label for="tag-select">Filter by Tag:</label>
-                        <select id="tag-select" name="tag">
-                            <option value="all">All</option>
-                            {% for tag in tags %}
-                                <option value="{{ tag.name }}">{{ tag.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit">Filter</button>
-                    </div>
-                </form>
-                <div class="activity-data">
+            </form>
+            <div class="activity-data">
                 {% if inventory %}
-                    <div class="data names">
-                        <span class="data-title">Inventory Name</span>
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Inventory Name</th>
+                            <th class="description-col">Beschreibung</th>
+                            <th>Fachgruppe</th>
+                            <th>Tags</th>
+                            <th>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {% for item in inventory %}
-                            <a href="{% url 'inventory_details' id=item.id %}" class="data-list">{{ item.name }}</a>
-                        {% endfor %}
-                    </div>
-                    <div class="data joined">
-                        <span class="data-title">Beschreibung</span>
-                        {% for item in inventory %}
+                        <tr>
+                            <td><a href="{% url 'inventory_details' id=item.id %}" class="data-list">{{ item.name }}</a></td>
                             {% if item.description|length > 40 %}
-                                <span class="data-list">{{ item.description|slice:":40" }}...</span>
-                                {% else %}
-                                    <span class="data-list">{{ item.description }}</span>
-                                {% endif %}
-                        {% endfor %}
-                    </div>
-                    <div class="data type">
-                        <span class="data-title">Fachgruppe</span>
-                        {% for item in inventory %}
-                            <span class="data-list">{{ item.group }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="data new-column">
-                        <span class="data-title">Tags</span>
-                        {% for item in inventory %}
-                            {% if item.tags.all %}
-                            <div class="tags-container" id="tags-container-{{ item.id }}">
-                                {% for tag in item.tags.all %}
-                                    <span class="tag">{{ tag.name }}</span>
-                                {% endfor %}
-                            </div>
+                                <td>{{ item.description|slice:":40" }}...</td>
                             {% else %}
-                                <span class="data-list">Keine Tags</span>
+                                <td>{{ item.description }}</td>
                             {% endif %}
-                        {% endfor %}
-                    </div>
-                    <div class="data status">
-                        <span class="data-title">Aktion</span>
-                        {% for item in inventory %}
-                            <button type="button" class="button" data-url="{% url 'inventory_details' id=item.id %}">
-                                <span class="button__text">Bearbeiten</span>
-                                <span class="button__icon">
+                            <td>{{ item.group }}</td>
+                            {% if item.tags.all %}
+                                <td>
+                                    <div class="tags-container" id="tags-container-{{ item.id }}">
+                                        {% for tag in item.tags.all %}
+                                            <span class="tag">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td>Keine Tags</td>
+                            {% endif %}
+                            <td>
+                                <button type="button" class="button" data-url="{% url 'inventory_details' id=item.id %}">
+                                    <span class="button__text">Bearbeiten</span>
+                                    <span class="button__icon">
                                     <ion-icon name="create-outline"></ion-icon>
-                                </span>
-                            </button>
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
                         {% endfor %}
-                    </div>
+                    </tbody>
+                </table>
                 {% else %}
-                    <div class="no-data">
-                        Keine Daten verfügbar
-                    </div>
-                {% endif %}
+                <div class="no-data">
+                    Keine Daten verfügbar
                 </div>
+                {% endif %}
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
     <script src="{% static 'js/../../static/admin/js/inventory.js' %}"></script>
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
     <script>

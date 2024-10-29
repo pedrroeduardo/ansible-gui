@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views.login import index
+from .views.teste import teste
 from .views.logout import logout_view
 from .views.dashboard import dashboard
 
@@ -19,6 +20,7 @@ from .views.jobs.run_job import create_new_job_run, run_job, details_run_job
 
 urlpatterns = [
     path("", index),
+    path("teste/", teste, name="teste"),
     path("dashboard/", dashboard, name="dashboard"),
     path("logout/", logout_view, name="logout"),
 

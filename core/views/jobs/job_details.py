@@ -52,11 +52,11 @@ def item_job_details(request, id):
             else:
                 error_message = form.errors
 
-        elif action == 'delete':
+        if action == 'delete':
             job.delete()
             return redirect('jobs')
 
-        elif action == 'cancel':
+        if action == 'cancel':
             return redirect('jobs')
 
         initial_data = {

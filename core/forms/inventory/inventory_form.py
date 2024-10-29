@@ -28,7 +28,7 @@ class InventoryForm(forms.Form):
         choices=[], widget=forms.CheckboxSelectMultiple, required=False
     )
     selected_tags = forms.MultipleChoiceField(
-        choices=[], widget=forms.CheckboxSelectMultiple, required=True
+        choices=[], widget=forms.CheckboxSelectMultiple, required=False
     )
     content = forms.CharField(
         widget=forms.Textarea(attrs={

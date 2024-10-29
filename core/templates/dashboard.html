@@ -73,7 +73,7 @@
             </ul>
         </div>
     </nav>
-    <section class="dashboard">
+<section class="dashboard">
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
         </div>
@@ -85,70 +85,51 @@
                 </div>
                 <div class="activity-data">
                     {% if jobs %}
-                    <div class="data names">
-                        <span class="data-title">Task</span>
-                        {% for item in jobs %}
-                            <a href="{% url 'details-run-job' id=item.id %}" class="data-list">{{ item.job.name }} #{{ item.id }}</a>
-                        {% endfor %}
-                    </div>
-                    <div class="data status">
-                        <span class="data-title">Status</span>
-                        {% for item in jobs %}
-                            {% if item.status.name == "Fehlgeschlagen" %}
-                                <button disabled class="btn failed">
-                                    <i class="uil uil-exclamation-triangle"></i>
-                                    Fehlgeschlagen
-                                </button>
-                            {% elif item.status.name == "Erfolgreich" %}
-                                <button disabled class="btn success">
-                                    <i class="uil uil-check-circle"></i>
-                                    Erfolgreich
-                                </button>
-                            {% else %}
-                                <button disabled class="btn failed">
-                                    <i class="uil uil-exclamation-triangle"></i>
-                                    Fehlgeschlagen
-                                </button>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <div class="data user">
-                        <span class="data-title">User</span>
-                        {% for item in jobs %}
-                            <span class="data-list">{{ item.username }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="data start">
-                        <span class="data-title">Start</span>
-                        {% for item in jobs %}
-                            <span class="data-list">{{ item.start_time }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="data playbook">
-                        <span class="data-title">Playbook</span>
-                        {% for item in jobs %}
-                            {% if item.job.name|length > 15 %}
-                                <span class="data-list">{{ item.job.name|slice:":15" }}...</span>
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th class="status-col">Status</th>
+                                <th>User</th>
+                                <th>Start</th>
+                                <th>Playbook</th>
+                                <th>Inventory</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in jobs %}
+                            <tr>
+                                <td><a href="{% url 'details-run-job' id=item.id %}">{{ item.job.name }} #{{ item.id }}</a></td>
+                                {% if item.status.name == "Fehlgeschlagen" %}
+                                    <td class="status-col"><button disabled class="btn failed">
+                                        <i class="uil uil-exclamation-triangle"></i>
+                                        Fehlgeschlagen
+                                    </button></td>
+                                {% elif item.status.name == "Erfolgreich" %}
+                                    <td class="status-col"><button disabled class="btn success">
+                                        <i class="uil uil-check-circle"></i>
+                                        Erfolgreich
+                                    </button></td>
                                 {% else %}
-                                    <span class="data-list">{{ item.job.name }}</span>
+                                    <td class="status-col"><button disabled class="btn failed">
+                                        <i class="uil uil-exclamation-triangle"></i>
+                                        Fehlgeschlagen
+                                    </button></td>
                                 {% endif %}
-                        {% endfor %}
-                    </div>
-                    <div class="data inventory">
-                        <span class="data-title">Inventory</span>
-                        {% for item in jobs %}
-                            <span class="data-list">{{ item.job.inventory.name }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="data action">
-                        <span class="data-action">Aktion</span>
-                        {% for item in jobs %}
-                            <a href="{% url 'create-run-job' id=item.job.id %}" class="btn run">
-                                <i class="uil uil-play"></i>
-                                Run
-                            </a>
-                        {% endfor %}
-                    </div>
+                                <td>{{ item.username }}</td>
+                                <td>{{ item.start_time }}</td>
+                                {% if item.job.name|length > 15 %}
+                                    <td>{{ item.job.name|slice:":15" }}...</td>
+                                {% else %}
+                                    <td>{{ item.job.name }}</td>
+                                {% endif %}
+                                <td>{{ item.job.inventory.name }}</td>
+                                <td><a href="{% url 'create-run-job' id=item.job.id %}" class="btn run"><i class="uil uil-play"></i>Run</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     {% else %}
                     <div class="no-data">
                         Keine Daten verfügbar
@@ -158,6 +139,7 @@
             </div>
         </div>
     </section>
+
     <script src="{% static 'js/../../static/admin/js/dashboard_ansible.js' %}"></script>
 </body>
 </html>

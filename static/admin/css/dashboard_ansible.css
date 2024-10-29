@@ -59,6 +59,60 @@ body.dark::-webkit-scrollbar-thumb:hover,
 body.dark .activity-data::-webkit-scrollbar-thumb:hover {
     background: #3A3B3C;
 }
+
+.dashboard {
+    width: 100%; /* Deixa o container da tabela com 100% */
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dashboard-table {
+    width: 90%; /* Tabela ocupa 90% da largura da tela */
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: none;
+}
+
+.dashboard-table th.status-col, .dashboard-table td.status-col {
+    width: 250px; /* Define uma largura fixa para a coluna Status */
+}
+
+.dashboard-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+}
+
+.dashboard-table th{
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.dashboard-table th {
+    background-color: #fff;
+    font-weight: bold;
+    color: #333;
+}
+
+.dashboard-table td a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
 nav {
     position: fixed;
     top: 0;
@@ -198,7 +252,7 @@ body.dark .switch:before {
 }
 .dashboard {
     position: relative;
-    left: 250px;
+    left: 124px;
     background-color: var(--panel-color);
     min-height: 100vh;
     width: calc(100% - 250px);
@@ -206,8 +260,8 @@ body.dark .switch:before {
     transition: var(--tran-05);
 }
 nav.close ~ .dashboard {
-    left: 73px;
-    width: calc(100% - 73px);
+    left: 55px;
+    width: calc(100% - 37px);
 }
 .dashboard .top {
     position: fixed;
@@ -402,6 +456,7 @@ nav.close ~ .dashboard .top {
     padding: 3px 5px; /* Reduced padding for smaller buttons */
     border: none;
     border-radius: 15px; /* More rounded corners */
+    width: 150px; /* Define uma largura fixa */
     color: white;
     font-size: 14px;
     cursor: pointer;
@@ -423,6 +478,7 @@ nav.close ~ .dashboard .top {
     background-color: #007bff;
     pointer-events: none;
 }
+
 /* Botão Run */
 .btn.run {
     margin-top: 8px;

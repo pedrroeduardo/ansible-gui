@@ -31,7 +31,9 @@ def create_job(request):
     tag_choices = [(tag.id, tag.name) for tag in available_tags]
 
     if request.method == 'POST':
-        form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices)
+        submitted_tag_ids = request.POST.getlist('selected_tags')
+        all_selected_ids = list(set([int(tag_id) for tag_id in submitted_tag_ids]))
+        form = JobForm(request.POST, playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices, selected_tag_ids=all_selected_ids)
         if form.is_valid():
             new_job = Job()
             new_job.name = form.cleaned_data['name']
@@ -41,7 +43,6 @@ def create_job(request):
             new_job.description = form.cleaned_data['description']
             new_job.save()
             new_job.tags.set(Tag.objects.filter(id__in=form.cleaned_data['selected_tags']))
-            new_job.save()
 
             return redirect('jobs')
         else:
@@ -49,7 +50,7 @@ def create_job(request):
             selected_tag_ids = [int(tag_id) for tag_id in request.POST.getlist('selected_tags')]
             form.fields['available_tags'].choices = [(tag_id, tag_name) for tag_id, tag_name in tag_choices if tag_id not in selected_tag_ids]
             form.fields['selected_tags'].choices = [(tag_id, tag_name) for tag_id, tag_name in tag_choices if tag_id in selected_tag_ids]
-            print("Formulário inválido", form.errors)
+            print("Invalid Form: ", form.errors)
     else:
         form = JobForm(playbook=playbook_choices, inventory=inventory_choices, tag_choices=tag_choices, selected_tag_ids=[])
         form.fields['selected_tags'].choices = []

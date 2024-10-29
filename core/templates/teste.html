@@ -1,6 +1,5 @@
 {% load static %}
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!----======== CSS ======== -->
-    <link rel="stylesheet" href="{% static 'css/../../static/admin/css/playbook.css' %}">
+    <link rel="stylesheet" href="{% static 'css/../../static/admin/css/teste.css' %}">
 
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-            <!-- Favicon para navegadores -->
+    <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
@@ -37,7 +36,7 @@
     <meta name="msapplication-square70x70logo" content="{% static 'css/../../static/admin/icons/mstile-70x70.png' %}">
     <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
     <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
-    <title>Playbook</title>
+    <title>Jobs</title>
 </head>
 <body>
     <nav>
@@ -57,11 +56,11 @@
                     <i class="uil uil-files-landscapes"></i>
                     <span class="link-name">Inventory</span>
                 </a></li>
-                <li><a href="#">
+                <li><a href="{% url 'playbook' %}">
                     <i class="uil uil-chart"></i>
                     <span class="link-name">Playbook</span>
                 </a></li>
-                <li><a href="{% url 'jobs' %}">
+                <li><a href="#">
                     <i class="uil uil-thumbs-up"></i>
                     <span class="link-name">Jobs</span>
                 </a></li>
@@ -79,17 +78,16 @@
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <div class="btn-search">
-                <a href="{% url 'create-playbook' %}" class="buttonLink">Playbook erstellen</a>
+                <a href="{% url 'create-job' %}" class="buttonLink">Job erstellen</a>
             </div>
-            <!--<img src="images/profile.jpg" alt="">-->
         </div>
         <div class="dash-content">
             <div class="activity">
                 <div class="title">
                     <i class="uil uil-clock-three"></i>
-                    <span class="text">Playbook</span>
+                    <span class="text">Jobs</span>
                 </div>
-                <form method="GET" action="{% url 'playbook' %}">
+                <form method="GET" action="{% url 'jobs' %}">
                     <div class="tag-filter">
                         <label for="tag-select">Filter by Tag:</label>
                         <select id="tag-select" name="tag">
@@ -102,51 +100,58 @@
                     </div>
                 </form>
                 <div class="activity-data">
-                    {% if playbook %}
+                    {% if job %}
                         <table class="dashboard-table">
                             <thead>
                                 <tr>
-                                    <th>Playbook Name</th>
+                                    <th>Job Name</th>
+                                    <th>Playbook</th>
+                                    <th>Inventory</th>
                                     <th class="description-col">Beschreibung</th>
-                                    <th>Fachgruppe</th>
                                     <th>Tags</th>
                                     <th>Aktion</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for item in playbook %}
-                                    <tr>
-                                        <td><a href="{% url 'playbook_details' id=item.id %}" class="data-list">{{ item.name }}</a></td>
-                                        {% if item.description|length > 40 %}
-                                            <td>{{ item.description|slice:":40" }}...</td>
-                                        {% else %}
-                                            <td>{{ item.description }}</td>
-                                        {% endif %}
-                                        <td>{{ item.group }}</td>
+                            {% for item in job %}
+                                <tr>
+                                    <td><a href="{% url 'job_details' id=item.id %}" class="data-list">{{ item.name }}</a></td>
+                                    <td>{{ item.playbook }}</td>
+                                    <td>{{ item.inventory }}</td>
+                                    {% if item.description|length > 15 %}
+                                        <td>{{ item.description|slice:":15" }}...</td>
+                                    {% else %}
+                                        <td>{{ item.description }}</td>
+                                    {% endif %}
+                                    <td>
                                         {% if item.tags.all %}
-                                            <td>
-                                                <div class="tags-container" id="tags-container-{{ item.id }}">
-                                                {% for tag in item.tags.all %}
-                                                    <span class="tag">{{ tag.name }}</span>
-                                                {% endfor %}
-                                                 </div>
-                                            </td>
-                                            {% else %}
-                                                <td>Keine Tags</td>
+                                            <div class="tags-container" id="tags-container-{{ item.id }}">
+                                        {% for tag in item.tags.all %}
+                                            <span class="tag">{{ tag.name }}</span>
+                                        {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            Keine Tags
                                         {% endif %}
-                                        <td>
-                                            <button type="button" class="button" data-url="{% url 'playbook_details' id=item.id %}">
-                                                <span class="button__text">Bearbeiten</span>
-                                                <span class="button__icon">
-                                                <ion-icon name="create-outline"></ion-icon>
-                                                </span>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="button" data-url="{% url 'job_details' id=item.id %}">
+                                            <span class="button__text">Bearbeiten</span>
+                                            <span class="button__icon">
+                                            <ion-icon name="create-outline"></ion-icon>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="button" data-url="{% url 'create-run-job' id=item.id %}">
+                                            <span class="button__text">Run</span>
+                                            <span class="button__icon">
+                                            <ion-icon name="create-outline"></ion-icon>
+                                        </span>
+                                        </button>
+                                    </td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-
                     {% else %}
                         <div class="no-data">
                             Keine Daten verfügbar
@@ -157,16 +162,16 @@
         </div>
     </section>
     <script src="{% static 'js/../../static/admin/js/inventory.js' %}"></script>
-<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.button');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            window.location.href = this.getAttribute('data-url');
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    window.location.href = this.getAttribute('data-url');
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 </body>
 </html>
