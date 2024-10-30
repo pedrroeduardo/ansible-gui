@@ -65,6 +65,12 @@
                     <i class="uil uil-thumbs-up"></i>
                     <span class="link-name">Jobs</span>
                 </a></li>
+                {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}">
+                    <i class="uil uil-setting"></i>
+                    <span class="link-name">Admin</span>
+                </a></li>
+                {% endif %}
             </ul>
 
             <ul class="logout-mode">
@@ -79,7 +85,7 @@
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <div class="btn-search">
-                <a href="{% url 'create-playbook' %}" class="buttonLink">Playbook erstellen</a>
+                <a href="{% url 'create-playbook' %}" class="buttonLink">Create playbook</a>
             </div>
             <!--<img src="images/profile.jpg" alt="">-->
         </div>
@@ -107,10 +113,10 @@
                             <thead>
                                 <tr>
                                     <th>Playbook Name</th>
-                                    <th class="description-col">Beschreibung</th>
-                                    <th>Fachgruppe</th>
+                                    <th class="description-col">Description</th>
+                                    <th>Groups</th>
                                     <th>Tags</th>
-                                    <th>Aktion</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,7 +142,7 @@
                                         {% endif %}
                                         <td>
                                             <button type="button" class="button" data-url="{% url 'playbook_details' id=item.id %}">
-                                                <span class="button__text">Bearbeiten</span>
+                                                <span class="button__text">Edit</span>
                                                 <span class="button__icon">
                                                 <ion-icon name="create-outline"></ion-icon>
                                                 </span>
@@ -149,7 +155,7 @@
 
                     {% else %}
                         <div class="no-data">
-                            Keine Daten verfügbar
+                            No data available
                         </div>
                     {% endif %}
                 </div>

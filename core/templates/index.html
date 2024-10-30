@@ -39,20 +39,20 @@
     </div>
     <div class="container">
       <div class="wrapper">
-        <div class="title"><span>Willkommen zu Ansible</span></div>
+        <div class="title"><span>Welcome to Ansible</span></div>
         <form action="#" method="post">
           {% csrf_token %}
           <div class="row">
             <i class="fas fa-user"></i>
-            <input type="text" name="{{ form.username.name }}" placeholder="Benutzername" required id="id_{{ form.username.name }}" class="{{ form.username.field.widget.attrs.class }}">
+            <input type="text" name="{{ form.username.name }}" placeholder="Username" required id="id_{{ form.username.name }}" class="{{ form.username.field.widget.attrs.class }}">
           </div>
           <div class="row">
             <i class="fas fa-lock"></i>
-            <input type="password" name="{{ form.password.name }}" placeholder="Passwort" required id="id_{{ form.password.name }}" class="{{ form.password.field.widget.attrs.class }}">
+            <input type="password" name="{{ form.password.name }}" placeholder="Password" required id="id_{{ form.password.name }}" class="{{ form.password.field.widget.attrs.class }}">
           </div>
           <div class="pass"><p>{{ error_message }}</p></div>
           <div class="row button">
-            <input type="submit" value="Einloggen">
+            <input type="submit" value="Login">
           </div>
         </form>
       </div>

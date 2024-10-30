@@ -64,6 +64,12 @@
                     <i class="uil uil-thumbs-up"></i>
                     <span class="link-name">Jobs</span>
                 </a></li>
+                {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}">
+                    <i class="uil uil-setting"></i>
+                    <span class="link-name">Admin</span>
+                </a></li>
+                {% endif %}
             </ul>
 
             <ul class="logout-mode">
@@ -78,7 +84,7 @@
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <div class="btn-search">
-                <a href="{% url 'create-job' %}" class="buttonLink">Job erstellen</a>
+                <a href="{% url 'create-job' %}" class="buttonLink">Create job</a>
             </div>
         </div>
         <div class="dash-content">
@@ -107,9 +113,9 @@
                                     <th>Job Name</th>
                                     <th>Playbook</th>
                                     <th>Inventory</th>
-                                    <th class="description-col">Beschreibung</th>
+                                    <th class="description-col">Description</th>
                                     <th>Tags</th>
-                                    <th>Aktion</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,7 +142,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="button" data-url="{% url 'job_details' id=item.id %}">
-                                            <span class="button__text">Bearbeiten</span>
+                                            <span class="button__text">Edit</span>
                                             <span class="button__icon">
                                             <ion-icon name="create-outline"></ion-icon>
                                             </span>
@@ -154,7 +160,7 @@
                         </table>
                     {% else %}
                         <div class="no-data">
-                            Keine Daten verfügbar
+                            No data available
                         </div>
                     {% endif %}
                 </div>

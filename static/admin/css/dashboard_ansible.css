@@ -431,6 +431,25 @@ nav.close ~ .dashboard .top {
     margin-top: 10px;
 }
 
+.tags-container {
+    display: flex;
+    flex-wrap: nowrap; /* Mantém as tags em uma única linha */
+    gap: 5px;
+    max-width: 200px; /* Limite de largura */
+    overflow-x: auto; /* Adiciona rolagem horizontal */
+    border-radius: 5px;
+    margin-top: 13px;
+}
+
+.tag {
+    background-color: var(--primary-color);
+    color: var(--title-icon-color);
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    white-space: nowrap; /* Garante que o texto da tag não quebre em várias linhas */
+}
+
 @media (min-width: 200px) {
     .activity-data .data.status .btn {
         margin-top: 10.9px;

@@ -4,7 +4,7 @@
 <html lang="en" dir="ltr">
    <head>
       <meta charset="utf-8">
-      <title>Playbook erstellen</title>
+      <title>Create playbook</title>
       <link rel="stylesheet" href="{% static 'css/../../static/admin/css/createinventory.css' %}">
       <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +36,7 @@
    </head>
 <body>
     <div class="container">
-        <div class="text">Playbook erstellen</div>
+        <div class="text">Create playbook</div>
         <form method="post">
             {% csrf_token %}
             <div class="form-row">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="select-menu" style="flex:1; min-width: 250px;">
                     <div class="select-btn">
-                        <span class="sBtn-text">Gruppe auswählen</span>
+                        <span class="sBtn-text">Select a group</span>
                         <i class="bx bx-chevron-down"></i>
                     </div>
                     <ul class="options">
@@ -71,7 +71,7 @@
             <div class="form-row">
                 <div class="tag-container">
                     <div class="tag-list" id="available-tags">
-                        <h3>Verfügbare tags</h3>
+                        <h3>Available tags</h3>
                         <ul>
                             {% for value, label in form.available_tags.field.choices %}
                                 <li>
@@ -88,7 +88,7 @@
                         <button type="button" id="remove-button">←</button>
                     </div>
                     <div class="tag-list" id="selected-tags">
-                        <h3>Ausgewählte tags</h3>
+                        <h3>Selected tags</h3>
                         <ul>
                             {% for value, label in form.selected_tags.field.choices %}
                                 <li>
@@ -107,8 +107,8 @@
                 {{ form.content }}
             </div>
             <div class="form-row">
-                <button type="submit" class="submit-btn">Erstellen</button>
-                <a href="{% url 'inventory' %}" class="button">Abbrechen</a>
+                <button type="submit" class="submit-btn">Create</button>
+                <a href="{% url 'playbook' %}" class="button">Cancel</a>
             </div>
         </form>
         <script>

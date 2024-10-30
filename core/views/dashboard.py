@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from core.models.group import Group
 from core.models.job_executed import JobExecuted
+from core.models.tag import Tag
 
 
 @login_required
@@ -15,9 +16,19 @@ def dashboard(request):
     # Searching for the corresponding groups in the Core model
     core_groups = Group.objects.filter(name__in=user_group_names)
 
-    if "Fachgruppe Leitung" in user_group_names:
-        jobs_runned = JobExecuted.objects.all()
-    else:
-        jobs_runned = JobExecuted.objects.filter(job__group__in=core_groups)
+    tags = Tag.objects.all()
 
-    return render(request, "dashboard.html", {"jobs": jobs_runned})
+    selected_tag = request.GET.get('tag')
+
+    if "Fachgruppe Leitung" in user_group_names:
+        if selected_tag and selected_tag != 'all':
+            job_executed = JobExecuted.objects.filter(tags__name=selected_tag)
+        else:
+            job_executed = JobExecuted.objects.all()
+    else:
+        if selected_tag and selected_tag != 'all':
+            job_executed = JobExecuted.objects.filter(group__in=core_groups, tags__name=selected_tag)
+        else:
+            job_executed = JobExecuted.objects.filter(job__group__in=core_groups)
+
+    return render(request, "dashboard.html", {"jobs": job_executed, "tags": tags})

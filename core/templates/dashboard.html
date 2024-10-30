@@ -64,6 +64,12 @@
                     <i class="uil uil-thumbs-up"></i>
                     <span class="link-name">Jobs</span>
                 </a></li>
+                {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}">
+                    <i class="uil uil-setting"></i>
+                    <span class="link-name">Admin</span>
+                </a></li>
+                {% endif %}
             </ul>
             <ul class="logout-mode">
                 <li><a href="{% url 'logout' %}">
@@ -83,6 +89,18 @@
                     <i class="uil uil-clock-three"></i>
                     <span class="text">Dashboard</span>
                 </div>
+                <form method="GET" action="{% url 'dashboard' %}">
+                    <div class="tag-filter">
+                        <label for="tag-select">Filter by Tag:</label>
+                        <select id="tag-select" name="tag">
+                            <option value="all">All</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Filter</button>
+                </div>
+                </form>
                 <div class="activity-data">
                     {% if jobs %}
                     <table class="dashboard-table">
@@ -94,6 +112,7 @@
                                 <th>Start</th>
                                 <th>Playbook</th>
                                 <th>Inventory</th>
+                                <th>Tags</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -104,17 +123,17 @@
                                 {% if item.status.name == "Fehlgeschlagen" %}
                                     <td class="status-col"><button disabled class="btn failed">
                                         <i class="uil uil-exclamation-triangle"></i>
-                                        Fehlgeschlagen
+                                        Failed
                                     </button></td>
                                 {% elif item.status.name == "Erfolgreich" %}
                                     <td class="status-col"><button disabled class="btn success">
                                         <i class="uil uil-check-circle"></i>
-                                        Erfolgreich
+                                        Successful
                                     </button></td>
                                 {% else %}
                                     <td class="status-col"><button disabled class="btn failed">
                                         <i class="uil uil-exclamation-triangle"></i>
-                                        Fehlgeschlagen
+                                        Failed
                                     </button></td>
                                 {% endif %}
                                 <td>{{ item.username }}</td>
@@ -125,6 +144,17 @@
                                     <td>{{ item.job.name }}</td>
                                 {% endif %}
                                 <td>{{ item.job.inventory.name }}</td>
+                                <td>
+                                    {% if item.tags.all %}
+                                        <div class="tags-container" id="tags-container-{{ item.id }}">
+                                            {% for tag in item.tags.all %}
+                                                <span class="tag">{{ tag.name }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        No tags
+                                    {% endif %}
+                                </td>
                                 <td><a href="{% url 'create-run-job' id=item.job.id %}" class="btn run"><i class="uil uil-play"></i>Run</a></td>
                             </tr>
                             {% endfor %}
@@ -132,7 +162,7 @@
                     </table>
                     {% else %}
                     <div class="no-data">
-                        Keine Daten verfügbar
+                        No data available
                     </div>
                     {% endif %}
                 </div>
@@ -141,5 +171,15 @@
     </section>
 
     <script src="{% static 'js/../../static/admin/js/dashboard_ansible.js' %}"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.button');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            window.location.href = this.getAttribute('data-url');
+        });
+    });
+});
+</script>
 </body>
 </html>

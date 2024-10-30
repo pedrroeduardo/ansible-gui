@@ -35,7 +35,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="text">Playbook bearbeiten</div>
+        <div class="text">Edit playbook</div>
         <form method="post">
             {% csrf_token %}
             <div class="form-row">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="select-menu" style="flex:1; min-width: 250px;">
                     <div class="select-btn">
-                        <span class="sBtn-text">Gruppe auswählen</span>
+                        <span class="sBtn-text">Select a group</span>
                         <i class="bx bx-chevron-down"></i>
                     </div>
                     <ul class="options">
@@ -70,7 +70,7 @@
             <div class="form-row">
                 <div class="tag-container">
                     <div class="tag-list" id="available-tags">
-                        <h3>Verfügbare tags</h3>
+                        <h3>Available tags</h3>
                         <ul>
                             {% for value, label in form.available_tags.field.choices %}
                                 <li>
@@ -87,7 +87,7 @@
                         <button type="button" id="remove-button">←</button>
                     </div>
                     <div class="tag-list" id="selected-tags">
-                        <h3>Ausgewählte tags</h3>
+                        <h3>Selected tags</h3>
                         <ul>
                             {% for value, label in form.selected_tags.field.choices %}
                                 <li>
@@ -107,13 +107,13 @@
             </div>
             <div class="form-row-container">
                 <div class="form-row">
-                    <button type="submit" name="action" value="edit" class="submit-btn">Speichern</button>
+                    <button type="submit" name="action" value="edit" class="submit-btn">Edit</button>
                 </div>
                 <div class="form-row">
-                    <button type="submit" name="action" value="delete" class="submit-btn">Löschen</button>
+                    <button type="submit" name="action" value="delete" class="submit-btn">Delete</button>
                 </div>
                 <div class="form-row">
-                    <button type="submit" name="action" value="cancel" class="submit-btn">Abbrechen</button>
+                    <button type="submit" name="action" value="cancel" class="submit-btn">Cancel</button>
                 </div>
             </div>
         </form>

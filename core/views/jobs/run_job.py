@@ -15,8 +15,11 @@ def create_new_job_run(request, id):
         job=job,
         username=request.user.username,
         output="",
-        status=Status.objects.get(name="Laufend")
+        status=Status.objects.get(name="Laufend"),
     )
+
+    job_runned.tags.set(job.tags.all())
+
     return redirect('run-job', id=job_runned.id)
 
 

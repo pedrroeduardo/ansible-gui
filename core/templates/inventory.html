@@ -65,6 +65,12 @@
                     <i class="uil uil-thumbs-up"></i>
                     <span class="link-name">Jobs</span>
                 </a></li>
+                {% if user.is_superuser %}
+                <li><a href="{% url 'admin:index' %}">
+                    <i class="uil uil-setting"></i>
+                    <span class="link-name">Admin</span>
+                </a></li>
+                {% endif %}
             </ul>
 
             <ul class="logout-mode">
@@ -106,10 +112,10 @@
                     <thead>
                         <tr>
                             <th>Inventory Name</th>
-                            <th class="description-col">Beschreibung</th>
-                            <th>Fachgruppe</th>
+                            <th class="description-col">Description</th>
+                            <th>Groups</th>
                             <th>Tags</th>
-                            <th>Aktion</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,11 +137,11 @@
                                     </div>
                                 </td>
                             {% else %}
-                                <td>Keine Tags</td>
+                                <td>No tags</td>
                             {% endif %}
                             <td>
                                 <button type="button" class="button" data-url="{% url 'inventory_details' id=item.id %}">
-                                    <span class="button__text">Bearbeiten</span>
+                                    <span class="button__text">Edit</span>
                                     <span class="button__icon">
                                     <ion-icon name="create-outline"></ion-icon>
                                     </span>
@@ -147,7 +153,7 @@
                 </table>
                 {% else %}
                 <div class="no-data">
-                    Keine Daten verfügbar
+                    No data available
                 </div>
                 {% endif %}
             </div>
