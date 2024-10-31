@@ -1,4 +1,5 @@
 {% load static %}
+{% load reverse_list %}
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -120,7 +121,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for item in playbook %}
+                                {% for item in playbook|reverse_list %}
                                     <tr>
                                         <td><a href="{% url 'playbook_details' id=item.id %}" class="data-list">{{ item.name }}</a></td>
                                         {% if item.description|length > 40 %}

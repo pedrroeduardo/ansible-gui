@@ -1,4 +1,5 @@
 {% load static %}
+{% load reverse_list %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,7 +118,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in jobs %}
+                            {% for item in jobs|reverse_list%}
                             <tr>
                                 <td><a href="{% url 'details-run-job' id=item.id %}">{{ item.job.name }} #{{ item.id }}</a></td>
                                 {% if item.status.name == "Fehlgeschlagen" %}

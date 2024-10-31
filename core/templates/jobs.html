@@ -1,4 +1,5 @@
 {% load static %}
+{% load reverse_list %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,7 +120,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for item in job %}
+                            {% for item in job|reverse_list %}
                                 <tr>
                                     <td><a href="{% url 'job_details' id=item.id %}" class="data-list">{{ item.name }}</a></td>
                                     <td>{{ item.playbook }}</td>
