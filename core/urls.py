@@ -9,6 +9,7 @@ from .views.inventory.create_inventory import create_inventory
 from .views.inventory.inventory_details import item_inventory_details
 
 from .views.playbook.playbook import playbook
+from .views.playbook.select_playbook_type import select_playbook_type
 from .views.playbook.create_playbook import create_playbook
 from .views.playbook.playbook_details import item_playbook_details
 
@@ -28,7 +29,8 @@ urlpatterns = [
     path("inventory/create-inventory/", create_inventory, name="create-inventory"),
 
     path("playbook/", playbook, name="playbook"),
-    path("playbook/create-playbook/", create_playbook, name="create-playbook"),
+    path("playbook/type/", select_playbook_type, name="select_playbook_type"),
+    path("playbook/create-playbook/<str:type>", create_playbook, name="create_playbook"),
     path("playbook/details/<int:id>", item_playbook_details, name="playbook_details"),
 
     path("jobs/", jobs, name="jobs"),

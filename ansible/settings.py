@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["192.168.10.95", "ansible.ict-tfbern.ch", "andj-vs01.ict-tfbern.ch", "127.0.0.1"]
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_PATH = os.path.join(BASE_DIR, "config", "config.yaml")
+
 
 # Application definition
 
@@ -120,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'de-ch'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Zurich'
 

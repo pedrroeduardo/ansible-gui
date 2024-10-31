@@ -1,13 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
-<!-- Created By CodingNepal -->
-<html lang="en" dir="ltr">
-   <head>
-      <meta charset="utf-8">
-      <title>404</title>
-      <link rel="stylesheet" href="{% static 'css/../../static/admin/css/404.css' %}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-               <!-- Favicon para navegadores -->
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="{% static 'css/../../static/admin/css/select_playbook_type.css' %}">
+
+    <!----===== Iconscout CSS ===== -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+            <!-- Favicon para navegadores -->
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-16x16.png' %}" sizes="16x16">
     <link rel="icon" href="{% static 'css/../../static/admin/icons/favicon-32x32.png' %}" sizes="32x32">
@@ -31,24 +36,18 @@
     <meta name="msapplication-square70x70logo" content="{% static 'css/../../static/admin/icons/mstile-70x70.png' %}">
     <meta name="msapplication-square150x150logo" content="{% static 'css/../../static/admin/icons/mstile-150x150.png' %}">
     <meta name="msapplication-square310x310logo" content="{% static 'css/../../static/admin/icons/mstile-310x310.png' %}">
-   </head>
-   <body>
-      <div id="error-page">
-         <div class="content">
-            <h2 class="header" data-text="404">
-               404
-            </h2>
-            <h4 data-text="Opps! Page not found">
-               Opps! Page not found
-            </h4>
-            <p>
-               Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem.
-            </p>
-            <div class="btns">
-               <a href="{% url 'dashboard' %}">return home</a>
-               <a href="ict@tfbern.ch">report problem</a>
-            </div>
-         </div>
-      </div>
-   </body>
+    <title>Type Playbook</title>
+</head>
+<body>
+<div class="button-container">
+    <h1>Choose Type of Playbook</h1>
+    <p>Select the playbook type that best suits your needs below.</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for playbook in playbooks %}
+            <button type="submit" name="type" value="{{ playbook.type }}">{{ playbook.label }}</button>
+        {% endfor %}
+    </form>
+</div>
+</body>
 </html>

@@ -1,0 +1,48 @@
+playbooks:
+  # Cisco SMB Playbook Configuration
+  - name: "Cisco (SMB)"
+    type: smb
+    label: "Cisco (SMB)"
+    content: |
+      ---
+      - name: [PLAYBOOK NAME]
+        hosts: all
+        gather_facts: no
+
+        vars_files:
+          - credentials.yml
+
+        tasks:
+          - name: [TASK NAME]
+            community.ciscosmb.command:
+              commands:
+                - sh run
+            register: sh_run_output
+
+          - name: Print command output
+            debug:
+              var: sh_run_output.stdout
+
+  # Cisco iOS Playbook Configuration
+  - name: "Cisco (iOS)"
+    type: ios
+    label: "Cisco (iOS)"
+    content: |
+      ---
+      - name: [PLAYBOOK NAME]
+        hosts: all
+        gather_facts: no
+
+        vars_files:
+          - credentials.yml
+
+        tasks:
+          - name: [TASK NAME]
+            ios_command:
+              commands:
+                - sh run
+            register: sh_run_output
+
+          - name: Print command output
+            debug:
+              var: sh_run_output.stdout
