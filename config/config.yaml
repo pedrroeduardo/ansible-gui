@@ -46,3 +46,70 @@ playbooks:
           - name: Print command output
             debug:
               var: sh_run_output.stdout
+
+  - name: Linux / Ubuntu
+    type: linux
+    label: "Linux / Ubuntu"
+    content: |
+      - name: [PLAYBOOK NAME]
+        hosts: all
+        gather_facts: no
+      
+        vars_files:
+          - credentials.yml
+      
+        tasks:
+          - name: [TASK NAME]
+            command: ping -c 4 8.8.8.8
+            register: network_ping_output 
+
+          - name: [TASK NAME]
+            debug:
+              var: network_ping_output.stdout
+
+inventory:
+  # Cisco SMB Playbook Configuration
+  - name: "Cisco (SMB)"
+    type: smb
+    label: "Cisco (SMB)"
+    content: |
+      [(GROUP NAME)] 
+      [NAME] ansible_host=[IP-Adresse]
+      [NAME] ansible_host=[IP-Adresse]
+      [NAME] ansible_host=[IP-Adresse]
+
+      [(GROUP NAME):vars]
+      ansible_network_os=community.ciscosmb.ciscosmb
+      ansible_connection=network_cli
+      ansible_user="{{ ansible_username }}"
+      ansible_password="{{ ansible_password }}"
+
+  # Cisco iOS Playbook Configuration
+  - name: "Cisco (iOS)"
+    type: ios
+    label: "Cisco (iOS)"
+    content: |
+      [(GROUP NAME)] 
+      [NAME] ansible_host=[IP-Adresse]
+      [NAME] ansible_host=[IP-Adresse]
+      [NAME] ansible_host=[IP-Adresse]
+
+      [(GROUP NAME):vars]
+      ansible_network_os=cisco.ios.ios
+      ansible_connection=network_cli
+      ansible_user="{{ ansible_username }}"
+      ansible_password="{{ ansible_password }}"
+
+  - name: "Linux / Ubuntu"
+    type: linux
+    label: "Linux / Ubuntu"
+    content: |
+      [(GROUP NAME)] 
+      [NAME] ansible_host=[IP-Adresse]
+      [NAME] ansible_host=[IP-Adresse]
+      [NAME] ansible_host=[IP-Adresse]
+
+      [(GROUP NAME):vars]
+      ansible_connection=ssh
+      ansible_user="{{ ansible_username }}"
+      ansible_ssh_pass="{{ ansible_password }}"

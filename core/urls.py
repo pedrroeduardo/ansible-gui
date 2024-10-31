@@ -5,6 +5,7 @@ from .views.logout import logout_view
 from .views.dashboard import dashboard
 
 from .views.inventory.inventory import inventory
+from .views.inventory.select_inventory_type import select_inventory_type
 from .views.inventory.create_inventory import create_inventory
 from .views.inventory.inventory_details import item_inventory_details
 
@@ -25,8 +26,9 @@ urlpatterns = [
 
 
     path("inventory/", inventory, name="inventory"),
+    path("inventory/type/", select_inventory_type, name="select_inventory_type"),
+    path("inventory/create-inventory/<str:type>", create_inventory, name="create_inventory"),
     path("inventory/details/<int:id>", item_inventory_details, name="inventory_details"),
-    path("inventory/create-inventory/", create_inventory, name="create-inventory"),
 
     path("playbook/", playbook, name="playbook"),
     path("playbook/type/", select_playbook_type, name="select_playbook_type"),

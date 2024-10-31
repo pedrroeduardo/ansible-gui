@@ -3,20 +3,35 @@ from django.shortcuts import render, redirect
 from core.forms.inventory.inventory_form import InventoryForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+import yaml
+from django.conf import settings
 
 from core.models.tag import Tag
 from core.models.group import Group
 from core.models.inventory import Inventory
 
+with open(settings.CONFIG_PATH, "r") as file:
+    config = yaml.safe_load(file)
+
+inventories = config["inventory"]
 
 
 @login_required
-def create_inventory(request):
+def create_inventory(request, type):
     available_tags = Tag.objects.all()
     tag_choices = [(tag.id, tag.name) for tag in available_tags]
 
+    inventory_type = type
+    selected_inventory = next(
+        (inventory_option for inventory_option in inventories if inventory_option["type"] == inventory_type), None)
+
     if request.method == 'POST':
-        form = InventoryForm(request.POST, tag_choices=tag_choices)
+        if selected_inventory:
+            form = InventoryForm(
+                request.POST,
+                tag_choices=tag_choices,
+                initial={"content": selected_inventory["content"]}
+            )
         if form.is_valid():
             inventory_name = form.cleaned_data['inventory_name']
             group = form.cleaned_data['group']
@@ -43,7 +58,7 @@ def create_inventory(request):
             form.fields['selected_tags'].choices = [(tag.id, tag.name) for tag in Tag.objects.filter(id__in=form.cleaned_data.get('selected_tags', []))]
             print("Formulário inválido", form.errors)
     else:
-        form = InventoryForm(tag_choices=tag_choices)
+        form = InventoryForm(tag_choices=tag_choices, initial={'content': selected_inventory["content"]})
         form.fields['selected_tags'].choices = []  # Ensure selected tags are initially empty
 
     return render(request, "createinventory.html", {'form': form})
